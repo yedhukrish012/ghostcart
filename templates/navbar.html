@@ -14,12 +14,12 @@
                         <span>2</span>
                     </a>
                     {% if user.id is  None %}
-                    <div class="">
+                    <div class="models">
                         <a href="{% url 'register' %}">Register</a>
                         <a href="{% url 'login' %}" class="in">Sign in</a>
                     </div>
                 {% else %}
-                    <div class="">
+                    <div class="models">
                         <a href="#">{{user.first_name}} - </a>
                         <a href="{% url 'logout' %}" class="button"><u>logout</u></a>
                     </div>

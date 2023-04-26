@@ -30,9 +30,10 @@ def register(request):
             user = Account.objects.create_user(first_name = first_name, last_name = last_name, phone_number = phone_number, email = email, password = password1)
             user.save()
             request.session['email']=email
+            
             verify.send(phone_number)
             messages.success(request,"Registered Sucessfully! Verify OTP to Continue")
-            return redirect('/verify/')
+            return redirect('ver')
     context = {
         'form' : form
     }
@@ -40,19 +41,21 @@ def register(request):
 
 
 
-@login_required
+
 def verify_code(request):
     if request.method == 'POST':
         form = VerifyForm(request.POST)
         if form.is_valid():
-            code = form.cleaned_data.get('code')
-            if verify.check(request.user.phone, code):
-                request.user.is_verified = True
-                request.user.save()
-                return redirect('home')
+            code = form.cleaned_data['code']
+            user = Account._default_manager.get(email=request.session.get('email'))
+            if verify.check(user.phone_number, code):
+                user.is_active = True
+                user.is_verified = True
+                user.save()
+                return redirect('login')
     else:
         form = VerifyForm()
-    return render(request, 'verify.html', {'form': form})
+    return render(request, 'accounts/verify.html', {'form': form})
 
 
 def login(request):
