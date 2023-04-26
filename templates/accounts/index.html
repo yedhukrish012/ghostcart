@@ -145,11 +145,11 @@
                 <div class="col-lg-3 col-sm-6 mix all dresses bags">
                     <div class="single-product-item">
                         <figure>
-                            <a href="#"><img src="{{product.image.url}}" alt=""></a>
+                            <a href="{{product.get_url}}"><img src="{{product.image.url}}" alt=""></a>
                             <div class="p-status">new</div>
                         </figure>
                         <div class="product-text">
-                            <h6>{{product.product_name}}</h6>
+                            <a href="{{product.get_url}}"> <h6>{{product.product_name}}</h6></a>
                             <p>${{product.price}}</p>
                         </div>
                     </div>

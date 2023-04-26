@@ -33,6 +33,9 @@ class product(models.Model):
     is_available  =models.BooleanField(default=True)
     category      =models.ForeignKey(category,on_delete=models.CASCADE)
 
+    def get_url(self):
+        return reverse('product_details',args=[self.category.slug, self.slug])
+
     def __str__(self):
         return self.product_name
     
