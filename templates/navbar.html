@@ -13,18 +13,19 @@
                         <img src="{% static 'img/icons/bag.png' %}" alt="">
                         <span>2</span>
                     </a>
+                    {% if user.id is  None %}
+                    <div class="">
+                        <a href="{% url 'register' %}">Register</a>
+                        <a href="{% url 'login' %}" class="in">Sign in</a>
+                    </div>
+                {% else %}
+                    <div class="">
+                        <a href="#">{{user.first_name}} - </a>
+                        <a href="{% url 'logout' %}" class="button"><u>logout</u></a>
+                    </div>
+                    {% endif %}
                 </div>
-            {% if user.id is  None %}
-                <div class="user-access">
-                    <a href="{% url 'register' %}">Register</a>
-                    <a href="{% url 'login' %}" class="in">Sign in</a>
-                </div>
-            {% else %}
-                <div class="user-access">
-                    <a href="#">{{user.first_name}} - </a>
-                    <a href="{% url 'logout' %}" class="button"><u>logout</u></a>
-                </div>
-                {% endif %}
+       
                 <nav class="main-menu mobile-menu">
                     <ul>
                         <li><a class="active" href="{% url 'home' %}">Home</a></li>
