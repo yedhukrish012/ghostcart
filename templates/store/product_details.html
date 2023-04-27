@@ -72,7 +72,7 @@
                     {% if single_product.stock <= 0 %}
                      <h4 class="text-danger primary-btn pc-btn">out of stoke</h4>
                      {% else %}
-                    <a href="#" class="primary-btn pc-btn">Add to cart</a>
+                    <a href="{% url 'add_cart' single_product.id %}" class="primary-btn pc-btn">Add to cart</a>
                     {% endif %}
                     <ul class="p-info">
                         <li>Product Information</li>
