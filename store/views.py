@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 from carts.models import Cartitem
@@ -42,3 +43,6 @@ def product_details(request, category_slug, product_slug):
         'in_cart' : in_cart
     }
     return render(request,'store/product_details.html',context)
+
+def search(request):
+    return render(request,'store/store1.html')

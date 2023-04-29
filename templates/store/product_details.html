@@ -29,60 +29,86 @@
             <a href="#">Next</a>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 pt-5">
                 <div class="owl-carouse">
                     <div class="#">
                         <figure>
                             <img src="{{single_product.image.url}}" alt="">
-                            <div class="p-status">new</div>
+                            {% comment %} <div class="p-status">new</div> {% endcomment %}
                         </figure>
                     </div>
                     <div class="{{single_product.image.url}}">
                         <figure>
                             <img src="{{single_product.image}}" alt="">
-                            <div class="p-status">new</div>
+                            {% comment %} <div class="p-status">new</div> {% endcomment %}
                         </figure>
                     </div>
                 </div>
                 
             </div>
-            <div class="col-lg-6">
-                <div class="product-content">
-                    <h2>{{single_product.product_name}}</h2>
-                    <div class="pc-meta">
-                        <h5>${{single_product.price}}</h5>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                    </div>
-                    <p>{{single_product.discription}}.</p>
-                    <ul class="tags">
-                        <li><span>Category :</span> Men’s Wear</li>
-                        <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li>
-                    </ul>
-                    <div class="product-quantity">
-                        <div class="pro-qty">
-                            <input type="text" value="1">
-                        </div>
-                    </div>
-                    {% if single_product.stock <= 0 %}
+            <div  class="col-lg-6">
+                <form action="{% url 'add_cart' single_product.id %}" method = "POST">
+                    {% csrf_token %}
+                    <div >
+                        <div class="product-content">
+                            <h2>{{single_product.product_name}}</h2>
+                            <div class="pc-meta">
+                                <h5>${{single_product.price}}</h5>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                            <p>{{single_product.discription}}.</p>
+                            <div class="product-control">
+                                <div>
+                                  <h5>Choose color</h5>
+                                  <select name="color" required>
+                                    <option value=""disabled selected>Color</option>
+                                    {% for i in single_product.variation_set.colors %}
+                                    <option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                                <div>
+                                  <h5>Choose Size</h5>
+                                  <select name="size" required>
+                                    <option value=""disabled selected>Size</option>
+                                    {% for i in single_product.variation_set.sizes %}
+                                    <option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                              
+                            {% comment %} <ul class="tags">
+                                <li><span>Category :</span> Men’s Wear</li>
+                                <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li>
+                            </ul> {% endcomment %}
+                            <div class="product-quantity">
+                                <div class="pro-qty">
+                                    <input type="text" value="1">
+                                </div>
+                            </div>
+                            {% if single_product.stock <= 0 %}
                             <h4 class="text-danger primary-btn pc-btn">out of stock</h4>
                         {% else %}
                             {% if in_cart %}
-                                <a  href="{% url 'add_cart' single_product.id %}" class= "primary-btn pc-btn" style="background-color: green; color: white;">Added to cart</a>
+                                <button  type="submit"  href="#" class= "primary-btn pc-btn" style="background-color: green; color: white;">Added to cart</button>
                             {% else %}
-                            <a  href="{% url 'add_cart' single_product.id %}" class= "primary-btn pc-btn" style="background-color: blue; color: white;">Add to cart</a>
+                                <button type="submit" href="#" class= "primary-btn pc-btn" style="background-color: blue; color: white;">Add to cart</button>
                             {% endif %}
                         {% endif %}
-                    <ul class="p-info">
+                </form>
+            </div>
+                    {% comment %} <ul class="p-info">
                         <li>Product Information</li>
                         <li>Reviews</li>
                         <li>Product Care</li>
-                    </ul>
+                    </ul> {% endcomment %}
                 </div>
             </div>
         </div>
