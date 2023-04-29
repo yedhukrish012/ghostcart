@@ -44,10 +44,33 @@
                             </div>
                             <div class="cf-right">
                                 <span>{{product_count}} Products</span>
-                                <a href="#">2</a>
-                                <a href="#" class="active">4</a>
-                                <a href="#">6</a>
-                            </div>
+                                <!-- Display the products here -->
+...
+
+<!-- Display the pagination links -->
+                                        {% if products.has_other_pages %}
+                                            <div class="pagination">
+                                                <span class="step-links">
+                                                    {% if products.has_previous %}
+                                                        {% comment %} <a href="?page=1">&laquo; First</a> {% endcomment %}
+                                                        {% comment %} <a href="?page={{ products.previous_page_number }}">previous</a> {% endcomment %}
+                                                    {% endif %}
+
+                                                    {% for i in products.paginator.page_range %}
+                                                        {% if products.number == i %}
+                                                            <span class="current-page">{{ i }}</span>
+                                                        {% else %}
+                                                            <a href="?page={{ i }}">{{ i }}</a>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    {% if products.has_next %}
+                                                        {% comment %} <a href="?page={{ products.next_page_number }}">next</a>
+                                                        <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a> {% endcomment %}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
                         </div>
                     </div>
                 </div>

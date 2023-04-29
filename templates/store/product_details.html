@@ -70,10 +70,14 @@
                         </div>
                     </div>
                     {% if single_product.stock <= 0 %}
-                     <h4 class="text-danger primary-btn pc-btn">out of stoke</h4>
-                     {% else %}
-                    <a href="{% url 'add_cart' single_product.id %}" class="primary-btn pc-btn">Add to cart</a>
-                    {% endif %}
+                            <h4 class="text-danger primary-btn pc-btn">out of stock</h4>
+                        {% else %}
+                            {% if in_cart %}
+                                <a  href="{% url 'add_cart' single_product.id %}" class= "primary-btn pc-btn" style="background-color: green; color: white;">Added to cart</a>
+                            {% else %}
+                            <a  href="{% url 'add_cart' single_product.id %}" class= "primary-btn pc-btn" style="background-color: blue; color: white;">Add to cart</a>
+                            {% endif %}
+                        {% endif %}
                     <ul class="p-info">
                         <li>Product Information</li>
                         <li>Reviews</li>

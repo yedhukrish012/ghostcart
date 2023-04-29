@@ -3,9 +3,12 @@ from django.shortcuts import get_object_or_404, render
 from django.shortcuts import redirect, render
 from . models import Cart, Cartitem
 from store.models import product
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 def mycart(request,total = 0, quantity = 0, cart_items = None):
+    tax = 0
+    grand_total = 0
     try:
         mycart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = Cartitem.objects.filter(cart=mycart,is_active=True)
@@ -14,7 +17,7 @@ def mycart(request,total = 0, quantity = 0, cart_items = None):
             quantity += item.quantity
         tax = (.12 * total)
         grand_total = total + tax    
-    except:
+    except ObjectDoesNotExist:
         pass
     context = {
         'total':total,

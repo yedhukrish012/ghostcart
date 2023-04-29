@@ -23,6 +23,9 @@
 <!-- Page Add Section End -->
 
 <!-- Cart Page Section Begin -->
+{% if not cart_items %}
+  <h2 class = "text-center p-5">Your Shopping cart is empty.!</h2>
+{% else %}
 <div class="cart-page">
     <div class="container">
         <div class="cart-table">
@@ -40,9 +43,9 @@
                     {% for item in cart_items  %}
                     <tr>
                         <td class="product-col">
-                            <img src="{{ item.Product.image.url }}" alt="">
+                            <a href="{{item.Product.get_url}}"><img src="{{ item.Product.image.url }}" alt=""></a>
                             <div class="p-title">
-                                <h5>{{ item.Product.product_name }}</h5>
+                                <a href="{{item.Product.get_url}}"><h5>{{ item.Product.product_name }}</h5></a>
                             </div>
                         </td>
                         <td class="price-col">${{item.Product.price}}</td>
@@ -50,14 +53,17 @@
                             <div class="input-group">
                                 <span class="input-group-text">Product Count:</span>
                                 <a href="{% url 'remove_cart' item.Product.id %}" class="btn btn-outline-secondary" type="button" id="minus">-</a>
+                                <br>
                                 <input type="text" class="form-control text-center" id="count" value="{{ item.quantity }}">
+                                <br>
                                 <a href="{% url 'add_cart' item.Product.id %}" class="btn btn-outline-secondary" type="button" id="plus">+</a>
-                              </div>
+                            </div>
                         </td>
                         <td class="total">${{item.sub_total}}</td>
                         <td class="product-close"><a href="{% url 'del_cart' item.Product.id %}">x</a></td>
                     </tr>
                     {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>
@@ -69,8 +75,10 @@
                     </div>
                 </div>
                 <div class="col-lg-5 offset-lg-1 text-left text-lg-right">
-                    <div class="site-btn clear-btn">Clear Cart</div>
-                    <div class="site-btn update-btn">Update Cart</div>
+                    <div class="site-btn update-btn ">
+                        <div class="product-text"><a href="{% url 'store' %}">Update Cart</a></div>
+                    </div>
+                    {% comment %} <div class="site-btn clear-btn"><a href="{% url 'del_cart' %}">Clear Cart</a></div> {% endcomment %}
                 </div>
             </div>
         </div>

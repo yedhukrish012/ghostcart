@@ -1,76 +1,76 @@
-    {% load static %}
-    <!-- Header Section Begin -->
-    <header class="header-section">
-        <div class="container-fluid">
-            <div class="inner-header">
-                <div class="logo">
-                    <a href="./index.html"><img src="{% static 'img/logo.png' %}" alt=""></a>
-                </div>
-                <div class="header-right">
-                    <img src="{% static 'img/icons/search.png' %}" alt="" class="search-trigger">
-                    <img src="{% static 'img/icons/man.png' %}" alt="">
-                    <a href="#">
-                        <img src="{% static 'img/icons/bag.png' %}" alt="">
-                        <span>2</span>
-                    </a>
-                    {% if user.id is  None %}
-                    <div class="models">
-                        <a href="{% url 'register' %}">Register</a>
-                        <a href="{% url 'login' %}" class="in">Sign in</a>
-                    </div>
-                {% else %}
-                    <div class="models">
-                        <a href="#">{{user.first_name}} - </a>
-                        <a href="{% url 'logout' %}" class="button"><u>logout</u></a>
-                    </div>
-                    {% endif %}
-                </div>
-       
-                <nav class="main-menu mobile-menu">
-                    <ul>
-                        <li><a class="active" href="{% url 'home' %}">Home</a></li>
-                        <li><a href="/store">Shop</a>
-                            <ul class="sub-menu">
-                                {% for category in links %}
-                                <li><a href="{{ category.get_absolute_url }}">{{ category.category_name }}</a></li>
-                                {% endfor %}
-                                 <li><a href="shopping-cart.html">Shopping Card</a></li>
-                                <li><a href="check-out.html">Check out</a></li> 
-                            </ul>
-                        </li>
-                        
-                        <li><a href="./product-page.html">About</a></li>
-                        <li><a href="./check-out.html">Blog</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
-                    </ul>
-                </nav>
+{% load static %}
+<!-- Header Section Begin -->
+<header class="header-section">
+    <div class="container-fluid">
+        <div class="inner-header">
+            <div class="logo">
+                <a href="./index.html"><img src="{% static 'img/logo.png' %}" alt=""></a>
             </div>
+            <div class="header-right">
+                <img src="{% static 'img/icons/search.png' %}" alt="" class="search-trigger">
+                <img src="{% static 'img/icons/man.png' %}" alt="">
+                <a href="{% url 'mycart' %}">
+                    <img src="{% static 'img/icons/bag.png' %}" alt="">
+                    <span>{{cart_count}}</span>
+                </a>
+                {% if user.id is  None %}
+                <div class="models">
+                    <a href="{% url 'register' %}">Register</a>
+                    <a href="{% url 'login' %}" class="in">Sign in</a>
+                </div>
+            {% else %}
+                <div class="models">
+                    <a href="#">{{user.first_name}} - </a>
+                    <a href="{% url 'logout' %}" class="button"><u>logout</u></a>
+                </div>
+                {% endif %}
+            </div>
+   
+            <nav class="main-menu mobile-menu">
+                <ul>
+                    <li><a class="active" href="{% url 'home' %}">Home</a></li>
+                    <li><a href="/store">Shop</a>
+                        <ul class="sub-menu">
+                            {% for category in links %}
+                            <li><a href="{{ category.get_absolute_url }}">{{ category.category_name }}</a></li>
+                            {% endfor %}
+                             <li><a href="shopping-cart.html">Shopping Card</a></li>
+                            <li><a href="check-out.html">Check out</a></li> 
+                        </ul>
+                    </li>
+                    
+                    <li><a href="./product-page.html">About</a></li>
+                    <li><a href="./check-out.html">Blog</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </header>
-    <!-- Header Info Begin -->
-    <div class="header-info">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="header-item">
-                        <img src="{% static 'img/icons/delivery.png' %}" alt="">
-                        <p>Free shipping on orders over $30 in USA</p>
-                    </div>
+    </div>
+</header>
+<!-- Header Info Begin -->
+<div class="header-info">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="header-item">
+                    <img src="{% static 'img/icons/delivery.png' %}" alt="">
+                    <p>Free shipping on orders over $30 in USA</p>
                 </div>
-                <div class="col-md-4 text-left text-lg-center">
-                    <div class="header-item">
-                        <img src="{% static 'img/icons/voucher.png' %}" alt="">
-                        <p>20% Student Discount</p>
-                    </div>
+            </div>
+            <div class="col-md-4 text-left text-lg-center">
+                <div class="header-item">
+                    <img src="{% static 'img/icons/voucher.png' %}" alt="">
+                    <p>20% Student Discount</p>
                 </div>
-                <div class="col-md-4 text-left text-xl-right">
-                    <div class="header-item">
-                    <img src="{% static 'img/icons/sales.png' %}" alt="">
-                    <p>30% off on dresses. Use code: 30OFF</p>
-                </div>
-                </div>
+            </div>
+            <div class="col-md-4 text-left text-xl-right">
+                <div class="header-item">
+                <img src="{% static 'img/icons/sales.png' %}" alt="">
+                <p>30% off on dresses. Use code: 30OFF</p>
+            </div>
             </div>
         </div>
     </div>
-    <!-- Header Info End -->
-    <!-- Header End -->
+</div>
+<!-- Header Info End -->
+<!-- Header End -->
