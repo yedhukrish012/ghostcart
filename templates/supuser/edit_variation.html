@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center alert alert-danger">Edit Variation Panel</h2>
+</div>
+<div class="row">
+    <div class="col-sm-8 offset-2">
+        <h4 class="alert alert-info">Edit Variation Information</h4>
+        <form enctype="multipart/form-data" action="" method="post">
+            {% csrf_token %}
+            {{ variationform.as_p }}
+            <input type="submit" class="btn btn-success" value="Save">
+            <a href="{% url 'Variationmanage' %}" class="btn btn-info">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

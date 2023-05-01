@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{%  load static %} 
+{% block content %}
+<div class="container">
+  <h2>Variation Details</h2>
+  {% if variations %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Category</th>
+        <th>Value</th>
+        <th>Active</th>
+        <th>Created</th>
+        <th><a href = "{% url 'add_variation' %}" class ="btn btn-primary btn-sm">Add Product</a></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for variation in variations %}
+      <tr>
+        <td>{{ variation.Product.product_name }}</td>
+        <td>{{ variation.variation_category }}</td>
+        <td>{{ variation.variation_value }}</td>
+        <td>{{ variation.is_active }}</td>
+        <td>{{ variation.created_at }}</td>
+        <td>
+            <a href = "{% url 'edit_variation'  variation.id %}" class ="btn btn-warning btn-sm my-2 ">Edit</a>
+            <form action="{% url 'del_variation' variation.id  %}" method="post" class="d-inline">{% csrf_token %}
+                <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+            </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+   </table>
+   {% else %}
+   <h3 class="text-center alert alert-warning ">No Records Found</h3>
+  {% endif %}
+</div>
+
+
+{% endblock content %}

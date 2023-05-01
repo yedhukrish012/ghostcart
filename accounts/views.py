@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
+    
     products = product.objects.all().filter(is_available = True)
     context = {
         "products" : products
@@ -68,7 +69,10 @@ def login(request):
             if myuser is not None:
                  auth.login(request,myuser)
                  messages.success(request,"you are now loggedin.")
-                 return redirect("home")
+                 if myuser.is_superadmin:
+                      return redirect("supuser")
+                 else:
+                      return redirect("home")
             else:
                  messages.error(request,"invalid email or password")
                  return redirect('login')

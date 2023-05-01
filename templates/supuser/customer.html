@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{%  load static %} 
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <nav class="navbar d-flex alert alert-info justify-content-between">
+              <h3 >Show User Details</h3>
+            </nav>
+            {% if users %}
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Last Login</th>
+                    {% comment %} <th scope="col">Active</th> {% endcomment %}
+                    <th scope="col">Action</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                  <tr>
+                    <th scope="row">{{user.first_name}}</th>
+                    <td>{{user.last_name}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone_number}}</td>
+                    <td>{{user.last_login}}</td>
+                    {% comment %} <td>{{user.is_active}}</td> {% endcomment %}
+                    <td>
+                      {% if user.is_active%}
+                        <form action="{% url 'block_user' user.id %}" method="post" class="d-inline">{% csrf_token %}
+                            <input type="submit" class="btn btn-danger btn-sm" value="Block">
+                        </form>
+                      {% else %}
+                        <form action="{% url 'unblock_user' user.id %}" method="post" class="d-inline">{% csrf_token %}
+                          <input type="submit" class="btn btn-success btn-sm" value="Unblock">
+                        </form>
+                      {% endif %}
+                    </td> 
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+                <h3 class="text-center alert alert-warning ">No Records Found</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

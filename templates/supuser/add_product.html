@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center alert alert-danger">Product Add Panel</h2>
+</div>
+<div class="row">
+    <div class="col-sm-8 offset-2">
+        <h4 class="alert alert-info">Add New Information</h4>
+        <form enctype="multipart/form-data" action="" method="post">
+            {% csrf_token %}
+            {{ product_form.as_p }}
+            <input type="submit" class="btn btn-success" value="Add">
+            <a href="{% url 'productmanage' %}" class="btn btn-info">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
