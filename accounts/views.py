@@ -1,4 +1,7 @@
 from django.shortcuts import redirect, render
+
+from carts.models import Cart, Cartitem
+from carts.views import _cart_id
 from . import verify
 from . models import Account
 from django.contrib import auth, messages
@@ -67,6 +70,44 @@ def login(request):
             myuser=auth.authenticate(email=email,password=password)
 
             if myuser is not None:
+                 try:
+                    mycart = Cart.objects.get(cart_id=_cart_id(request)) 
+                    is_cart_item_exists =Cartitem.objects.filter(cart=mycart).exists()
+                    if is_cart_item_exists:
+                         cart_item = Cartitem.objects.filter(cart=mycart)
+                         variation_products = []
+                         for item in cart_item:
+                              variation = item.variations.all()
+                              variation_products.append(list(variation))
+
+                        #get the cart cart items to access the user product variations
+                         cart_item = Cartitem.objects.filter(user=myuser)
+                         existing_variation_list = []
+                         id = []
+                         for item in cart_item:
+                             existing_variation = item.variations.all()
+                             existing_variation_list.append(list(existing_variation))
+                             id.append(item.id)
+
+
+                         for vp in variation_products:
+                              if vp in existing_variation_list:
+                                  index=existing_variation_list(vp)
+                                  item_id = id[index]
+                                  item = Cartitem.objects.get(id=item_id)
+                                  item.quantity += 1
+                                  item.user = myuser
+                                  item.save()
+                              else:
+                                  cart_item = Cartitem.objects.filter(cart=mycart)
+                                  for item in cart_item:
+                                    item.user = myuser
+                                    item.save()
+
+                         
+                 except:
+                      pass
+    
                  auth.login(request,myuser)
                  messages.success(request,"you are now loggedin.")
                  if myuser.is_superadmin:
@@ -83,3 +124,7 @@ def logout(request):
      auth.logout(request)
      messages.success(request,"logout sucessfully")
      return redirect("login")
+
+
+def forgotpassword(request):
+     return render(request,'accounts/forgotpassword.html')

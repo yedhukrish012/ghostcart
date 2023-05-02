@@ -34,6 +34,9 @@
     </tbody>
    </table>
    {% else %}
+   <div>
+    <a href = "{% url 'add_variation' %}" class ="btn btn-primary btn-sm">Add Product</a></th>
+  </div>
    <h3 class="text-center alert alert-warning ">No Records Found</h3>
   {% endif %}
 </div>

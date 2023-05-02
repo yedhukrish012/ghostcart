@@ -59,18 +59,23 @@
                         <td class="quantity-col">
                             <div class="input-group">
                                 <span class="input-group-text">Product Count:</span>
-                                <a href="{% url 'remove_cart' item.Product.id item.id %}" class="btn btn-outline-secondary" type="button" id="minus">-</a>
-                                <br>
-                                <input type="text" class="form-control text-center" id="count" value="{{ item.quantity }}">
-                                <br>
-                                <form action="{% url 'add_cart' item.Product.id %}" method = "POSt">
+                                <div class="d-inline-block">
+                                  <a href="{% url 'remove_cart' item.Product.id item.id %}" class="btn btn-outline-secondary" type="button" id="minus">-</a>
+                                </div>
+                                <div class="d-inline-block">
+                                  <input type="text" class="form-control text-center" id="count" value="{{ item.quantity }}">
+                                </div>
+                                <div class="d-inline-block">
+                                  <form action="{% url 'add_cart' item.Product.id %}" method="post">
                                     {% csrf_token %}
-                                    {% for i  in item.variations.all %}
-                                        <input type="hidden" name="{{ i.variation_category | lower}}" value="{{ i.variation_value | capfirst }}">  
-                                    {% endfor %} 
-                                        <button  class="btn btn-outline-secondary" type="submit" id="plus">+</button> 
-                                </form>
-                            </div>
+                                    {% for i in item.variations.all %}
+                                      <input type="hidden" name="{{ i.variation_category | lower }}" value="{{ i.variation_value | capfirst }}">
+                                    {% endfor %}
+                                    <button class="btn btn-outline-secondary" type="submit" id="plus">+</button>
+                                  </form>
+                                </div>
+                              </div>
+                              
                         </td>
                         <td class="total">${{item.sub_total}}</td>
                         <td class="product-close"><a href="{% url 'del_cart' item.Product.id item.id %}" onclick="return confirm("Are You Sure You Want To Remove It")" class= "btn btn-danger">Remove</a></td>
@@ -147,7 +152,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 text-right">
-                                <a href="#" class="primary-btn chechout-btn">Proceed to checkout</a>
+                                <a href="{% url 'checkout' %}" class="primary-btn chechout-btn">Proceed to checkout</a>
                             </div>
                         </div>
                     </div>
