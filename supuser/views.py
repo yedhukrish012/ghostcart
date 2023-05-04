@@ -7,17 +7,21 @@ from supuser.forms import CategoryForm, ProductForm, VariationForm
 
 # Create your views here.
 def supuser(request):
-    return render(request,'supuser/suphome.html')
+    if 'email' in request.session:
+        return render(request,'supuser/suphome.html')
+    return redirect('signin')
 
 
 #----------------------------------USER-MANAGE-ADMIN-side----------------------------------------------------------------------------------------
 
 def usermanage(request):
-    users = Account.objects.filter(is_superadmin=False).order_by('id').reverse()
-    context = {
-        'users': users,
-    }
-    return render(request,'supuser/customer.html',context)
+    if 'email' in request.session:
+        users = Account.objects.filter(is_superadmin=False).order_by('id').reverse()
+        context = {
+            'users': users,
+        }
+        return render(request,'supuser/customer.html',context)
+    return redirect('signin')
 
 def block_user(request,id):
     if request.method == 'POST':
@@ -39,11 +43,13 @@ def unblock_user(request,id):
 #-----------------------------------------------------CATEGOTY-MANAGE-------------------------------------------------------------------------------
 
 def categorymanage(request):
-    categories = category.objects.all()
-    context = {
-       "category": categories
-    }
-    return render(request, 'supuser/category.html', context)
+    if 'email' in request.session:
+        categories = category.objects.all()
+        context = {
+        "category": categories
+        }
+        return render(request, 'supuser/category.html', context)
+    return redirect('signin')
 
 
 def add_category(request):
@@ -71,11 +77,13 @@ def del_category(request,id):
 
 
 def productmanage(request):
-    Products = product.objects.all()
-    context = {
-        "Products" : Products 
-    }
-    return render(request, 'supuser/products.html', context)
+    if 'email' in request.session:
+        Products = product.objects.all()
+        context = {
+            "Products" : Products 
+        }
+        return render(request, 'supuser/products.html', context)
+    return redirect('signin')
 
 def add_product(request):
     if request.method == "POST":
@@ -122,11 +130,13 @@ def edit_product(request, id):
 #--------------------------------------------------VARIATION-MANAGE-----------------------------------------------------------------------------------------------------
 
 def Variationmanage(request):
-    variations = Variation.objects.all()
-    context = {
-        "variations" : variations
-    }
-    return render(request, 'supuser/Variation.html', context)
+    if 'email' in request.session:
+        variations = Variation.objects.all()
+        context = {
+            "variations" : variations
+        }
+        return render(request, 'supuser/Variation.html', context)
+    return redirect('signin')
 
 def add_variation(request):
     if request.method == "POST":

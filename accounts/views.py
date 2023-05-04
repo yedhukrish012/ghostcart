@@ -10,6 +10,14 @@ from . forms import VerifyForm, registration
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+
 # Create your views here.
 def home(request):
     
@@ -56,13 +64,13 @@ def verify_code(request):
                 user.is_active = True
                 user.is_verified = True
                 user.save()
-                return redirect('login')
+                return redirect('signin')
     else:
         form = VerifyForm()
     return render(request, 'accounts/verify.html', {'form': form})
 
 
-def login(request):
+def signin(request):
         if request.method == "POST":
             email = request.POST['email']
             password = request.POST['password']
@@ -70,6 +78,7 @@ def login(request):
             myuser=auth.authenticate(email=email,password=password)
 
             if myuser is not None:
+                 
                  try:
                     mycart = Cart.objects.get(cart_id=_cart_id(request)) 
                     is_cart_item_exists =Cartitem.objects.filter(cart=mycart).exists()
@@ -111,20 +120,83 @@ def login(request):
                  auth.login(request,myuser)
                  messages.success(request,"you are now loggedin.")
                  if myuser.is_superadmin:
+                      request.session['email'] = email
                       return redirect("supuser")
                  else:
                       return redirect("home")
             else:
                  messages.error(request,"invalid email or password")
-                 return redirect('login')
+                 return redirect('signin')
         return render(request, 'accounts/login.html')
 
-@login_required(login_url = "login")
+@login_required(login_url = "signin")
 def logout(request):
+     if 'email' in request.session:
+         request.session.flush
      auth.logout(request)
      messages.success(request,"logout sucessfully")
-     return redirect("login")
+     return redirect("signin")
+
+def dashboard(request):
+    return render(request,'accounts/dashboard.html')
+
 
 
 def forgotpassword(request):
+     if request.method == "POST":
+         email = request.POST['email']
+         if Account.objects.filter(email=email).exists():
+             user =Account.objects.get(email__exact=email)
+
+             current_site =get_current_site(request)
+             mail_subject = 'ghostcart : Reset your password'
+             message = render_to_string( 'accounts/reset_account_password.html', {
+                'user': user,
+                'domain' : current_site,
+                'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
+                'token' : default_token_generator.make_token(user),
+                })
+             to_email = email
+             print(to_email)
+             send_email = EmailMessage(mail_subject,message,to=[to_email])
+             send_email.send()
+             messages.success(request, 'Password reset email has been sent to your email address')
+             return redirect('signin')
+         else:
+             messages.error(request,"Account Does't Exists!!!")
+             return redirect('forgotpassword')
      return render(request,'accounts/forgotpassword.html')
+
+def resetpassword_validate(request,uidb64,token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except(TypeError, ValueError,OverflowError, Account.DoesNotExist):
+        user = None
+    
+    if user  is not None and default_token_generator.check_token(user, token):
+        request.session['uid']= uid
+        messages.success(request,'Please reset your password.!')
+        return redirect('resetpassword')
+    else:
+        messages.error(request, 'Sorry, the activation link has expired.!')
+        return redirect('signin')
+    
+def resetpassword(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request,"sucessfully reset password")
+            return redirect('signin')
+
+        else:
+            messages.error(request,"Passwords are not match")
+            return redirect('resetpassword')
+    else:
+     return render(request,'accounts/resetpassword.html')
+    
