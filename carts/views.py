@@ -183,13 +183,16 @@ def del_cart(request,product_id,cart_item_id):
     return redirect('mycart')
 
 
-@login_required(login_url='login')
+@login_required(login_url='signin')
 def checkout(request,total = 0, quantity = 0, cart_items = None):
     tax = 0
     grand_total = 0
     try:
-        mycart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_items = Cartitem.objects.filter(cart=mycart,is_active=True)
+        if request.user.is_authenticated:
+            cart_items = Cartitem.objects.filter(user=request.user,is_active=True)
+        else:
+            mycart = Cart.objects.get(cart_id=_cart_id(request))
+            cart_items = Cartitem.objects.filter(cart=mycart,is_active=True)
         for item in cart_items:
             total += (item.Product.price*item.quantity)
             quantity += item.quantity

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{%  load static %} 
+{% block content %}
+{% include 'navbar.html' %}
+<!-- Page Add Section Begin -->
+<br><br>
+<div class="row">
+	<aside class="col-lg-7  p-5">
+        <div class="card ">
+            <div class="card-header">
+              Billing Address
+            </div>
+            <div class="card-body">
+                <h5 class="card-title mb-0">{{order.first_name}}</h5>
+                <p class="card-text mb-0">{{order.full_address}}</p>
+                <p class="card-text mb-0">{{order.city}},{{order.state}}</p>
+                <p class="card-text mb-0">{{order.country}}, PIN :{{order.pincode}}</p>
+                <p class="card-text mb-0">{{order.email}}</p>
+                <p class="card-text mb-0">{{order.phone}}</p>
+                 {% if order.order_note  %}
+                    <b>Order Note:</b>{{order.order_note}}
+                 {% endif %}
+        </div>
+        <div class="card ">
+            <div class="card-header">
+                Payment Method
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{order.payment}}</p>
+            </div>
+            <div class="card ">
+                <div class="card-header">
+                    Review Product
+                </div>
+                <div class="card">
+                    <div class="col-lg-12">
+                        <div class="order-table">
+                        {% for item in cart_items  %}
+                            <div class="cart-item">
+                                <span>Product</span>
+                                <a href="{{item.Product.get_url}}"><p>{{ item.Product.product_name }}</p></a>
+                            </div>
+                            <div class="cart-item">
+                                <span>Price</span>
+                                <p>${{item.Product.price}}</p>
+                            </div>
+                            <div class="cart-item">
+                                <span>Quantity</span>
+                                <p>{{ item.quantity }}</p>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div> <!-- card.// -->
+	</aside> <!-- col.// -->
+	<aside class="col-lg-4 py-5">
+		<div class="card">
+			<div class="card-body ">
+				<dl class="dlist-align">
+				  <dt>Total price:</dt>
+				  <dd class="text-right">${{total}}</dd>
+				</dl>
+				<dl class="dlist-align">
+				  <dt>Tax:</dt>
+				  <dd class="text-right"> ${{tax}}</dd>
+				</dl>
+				<dl class="dlist-align">
+				  <dt>Total:</dt>
+				  <dd class="text-right text-dark b"><strong>${{grand_total}}</strong></dd>
+				</dl>
+				<hr>
+               <div class = "button">subbmit</div>
+			</div> <!-- card-body.// -->
+		</div> <!-- card.// -->
+	</aside> <!-- col.// -->
+</div> <!-- row.// -->
+
+
+{% endblock content %}
