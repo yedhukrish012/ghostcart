@@ -7,7 +7,7 @@
     <h2 class="text-center">Order Successful</h2>
 	<br>
 	<div class="text-center">
-		<a href="{% url 'joejee:Shop' %}" class="btn btn-success">Shop more</a>
+		<a href="{% url 'store' %}" class="btn btn-success">Shop more</a>
 	</div>
 </div>
 
@@ -22,7 +22,7 @@
                         <!-- Start .row -->
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><img src="{% static 'joejee/img/tlogo.png' %}" alt="Invoice logo" style="max-height: 60px;"></div>
+                            <div class="invoice-logo"> <img src="{% static 'img/logo1.png' %}" alt="" width="88rem" ></div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -30,7 +30,7 @@
                             <div class="invoice-from">
                                 <ul class="list-unstyled text-right">
                                     <li><strong>Invoiced To</strong></li>
-                                    <li>{{order.full_name}}</li>
+                                    <li>{{order.first_name}}</li>
                                     <li>{{order.full_address}}</li>
                                     <li>{{order.city}}, {{order.state}}, {{order.country}}</li>
                                     <li>PIN : {{order.pincode}}</li>
@@ -43,8 +43,8 @@
                             <div class="invoice-details mt25">
                                 <div class="well">
                                     <ul class="list-unstyled mb0">
-                                        <li><strong>Order</strong> #{{order.order_number}}</li>
-                                        <li><strong>Transaction ID</strong> #{{transID}}</li>
+                                        <li><strong>Order:</strong> #{{order.order_number}}</li>
+                                        <li><strong>Transaction ID:</strong> #{{transationID}}</li>
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
                                         <li><strong>Status:</strong> {{payment.status}}</li>
                                     </ul>
@@ -74,23 +74,23 @@
                                                 </p>
                                                 </td>
                                                 <td class="text-center">{{item.quantity}}</td>
-                                                <td class="text-center">₹ {{item.product_price}}</td>
+                                                <td class="text-center">$ {{item.product_price}}</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">₹ {{subtotal}}</th>
+                                                <th class="text-center">$ {{subtotal}}</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">₹ {{order.tax}}</th>
+                                                <th class="text-center">$ {{order.tax}}</th>
                                             </tr>
                                             
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">₹ {{order.order_total}}</th>
+                                                <th class="text-center">$ {{order.order_total}}</th>
                                             </tr>
                                         </tfoot>
                                     </table>

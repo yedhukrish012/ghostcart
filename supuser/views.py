@@ -1,9 +1,10 @@
+from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.models import Account
-from store.models import Variation, category,product
-from supuser.forms import CategoryForm, ProductForm, VariationForm
+from store.models import ProductImage, Variation, category,product
+from supuser.forms import CategoryForm, ProductForm, VariationForm, images
 
 # Create your views here.
 def supuser(request):
@@ -85,18 +86,31 @@ def productmanage(request):
         return render(request, 'supuser/products.html', context)
     return redirect('signin')
 
+
+
+# ProductImageFormSet = inlineformset_factory(product, ProductImage, form=images, extra=3)
+ProductImageFormSet = inlineformset_factory(product, ProductImage, form=images, extra=3, fields=['image'])
+
+
+
 def add_product(request):
     if request.method == "POST":
         product_form = ProductForm(request.POST, request.FILES)
-        if product_form.is_valid():
-            product_form.save()
+        image_form = ProductImageFormSet(request.POST, request.FILES, instance=product())
+        if product_form.is_valid() and image_form.is_valid():
+            myproduct = product_form.save(commit=False)
+            myproduct.save()
+            image_form.instance = myproduct
+            image_form.save()
             return redirect('productmanage')
     else:
         product_form = ProductForm()
-    context = {
-        "product_form" : product_form
-    }
+        image_form = ProductImageFormSet(instance=product())
+    
+    context = {'product_form': product_form, 'image_form': image_form}
     return render(request, 'supuser/add_product.html', context)
+   
+   
 
 
 

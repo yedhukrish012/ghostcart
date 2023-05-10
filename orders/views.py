@@ -15,7 +15,7 @@ def payments(request):
     order = Order.objects.get(user = request.user,is_ordered=False,order_number=body['orderID'])
     #store transation details inside payment model
     mypayment = Payment(
-         user  = request.user,
+        user  = request.user,
         payment_id = body['transID'],
         payment_method = body['payment_method'],
         amount_paid = order.order_total,
@@ -60,13 +60,13 @@ def payments(request):
 
 
 
-    mail_subject = 'ghostcart: Thank you for your order'
-    message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
-    to_email = request.user.email
-    print(to_email)
-    send_email = EmailMessage(mail_subject, message)
-    send_email.to = [to_email]
-    send_email.send()
+    # mail_subject = 'ghostcart: Thank you for your order'
+    # message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
+    # to_email = request.user.email
+    # print(to_email)
+    # send_email = EmailMessage(mail_subject, message, to=[to_email])
+    # send_email.to = [to_email]
+    # send_email.send()
 
 
     data = {
@@ -140,5 +140,25 @@ def place_order(request,total = 0, quantity = 0):
         
 
 def ord_complete(request):
-    return render(request,'orders/ord_complete.html')
+    myorder_number = request.GET.get('order_number')
+    transationID = request.GET.get('payment_id')
+
+    try:
+        order = Order.objects.get(order_number=myorder_number,is_ordered=True)
+        ordered_product = OrderProduct.objects.filter(order_id=order.id)
+        payment = Payment.objects.get(payment_id=transationID)
+        subtotal = 0
+        for i in ordered_product:
+            subtotal += i.product_price
+        context = {
+            'order' : order,
+            'ordered_product':ordered_product,
+            'transationID':transationID,
+            'payment':payment,
+            'subtotal':subtotal
+        }
+
+        return render(request,'orders/ord_complete.html',context)
+    except(Payment.DoesNotExist,Order.DoesNotExist):
+        return redirect('home')
     

@@ -105,6 +105,7 @@
     var orderID = "{{order.order_number}}"
     var payment_method= 'PayPal'
     var redirect_url= "{% url 'ord_complete' %}"
+    console.log(orderID)
         // Render the PayPal button into #paypal-button-container
     paypal.Buttons({
         // Set up the transaction

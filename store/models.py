@@ -39,6 +39,7 @@ class product(models.Model):
     def __str__(self):
         return self.product_name
     
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -51,8 +52,26 @@ class product(models.Model):
 
     def get_url(self):
         return reverse('product_details',args=[self.category.slug, self.slug])
+    
+
+    def get_image_upload_path(instance, filename):
+        # Generate a unique filename for each uploaded image
+        return 'photos/products/{0}/{1}'.format(instance.slug, filename)
+
+   
+
+    # Main product image
+    image = models.ImageField(upload_to=get_image_upload_path)
 
 
+    # existing methods...
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='photos/products')
+
+    def __str__(self):
+        return self.image.url
     
 
 class VariationManager(models.Manager):

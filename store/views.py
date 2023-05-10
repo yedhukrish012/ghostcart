@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 from carts.models import Cartitem
 from carts.views import _cart_id
-from .models import category, product
+from .models import ProductImage, category, product
 
 # Create your views here.
 def store(request,category_slug = None):
@@ -36,11 +36,14 @@ def product_details(request, category_slug, product_slug):
     try:
         single_product = product.objects.get(category__slug=category_slug, slug=product_slug)
         in_cart = Cartitem.objects.filter(cart__cart_id = _cart_id(request),Product=single_product).exists()
+        pictures = ProductImage.objects.filter(product=single_product)
+        print(pictures)
     except Exception as e:
         raise e
     context = {
         'single_product' : single_product,
-        'in_cart' : in_cart
+        'in_cart' : in_cart,
+        'pictures' : pictures 
     }
     return render(request,'store/product_details.html',context)
 

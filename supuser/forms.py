@@ -1,6 +1,6 @@
 from django import forms
 
-from store.models import Variation, category,product
+from store.models import ProductImage, Variation, category,product
 
 
 class CategoryForm(forms.ModelForm):
@@ -18,6 +18,10 @@ class ProductForm(forms.ModelForm):
         }
 
     image = forms.ImageField(label='Product Image', required=True, error_messages={'required': 'Please upload an image.'})
+
+class images(forms.ModelForm):
+    model = ProductImage
+    fields = ["product","image"]
 
 
 
