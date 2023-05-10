@@ -51,6 +51,8 @@ class product(models.Model):
 
     def get_url(self):
         return reverse('product_details',args=[self.category.slug, self.slug])
+
+
     
 
 class VariationManager(models.Manager):

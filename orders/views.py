@@ -1,12 +1,81 @@
 import datetime
+from email.message import EmailMessage
+import json
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from carts.models import Cartitem
-from orders.models import Order
+from orders.models import Order, OrderProduct, Payment
+from store.models import product
 from  .forms import OrderForm
+from django.template.loader import render_to_string
 
 # Create your views here.
 def payments(request):
-    return render(request,'orders/payments.html')
+    body = json.loads(request.body)
+    order = Order.objects.get(user = request.user,is_ordered=False,order_number=body['orderID'])
+    #store transation details inside payment model
+    mypayment = Payment(
+         user  = request.user,
+        payment_id = body['transID'],
+        payment_method = body['payment_method'],
+        amount_paid = order.order_total,
+        status = body['status'],
+    )
+    mypayment.save()
+
+    order.payment=mypayment
+    order.is_ordered = True
+    order.save()
+    
+    #move the cart items to order product table
+
+    cart_item = Cartitem.objects.filter(user=request.user)
+
+    for item in cart_item:
+        orderproduct = OrderProduct()
+        orderproduct.order_id = order.id
+        orderproduct.payment = mypayment
+        orderproduct.user_id = request.user.id
+        orderproduct.product_id = item.Product_id
+        orderproduct.quantity  = item.quantity
+        orderproduct.product_price = item.Product.price
+        orderproduct.ordered = True
+        orderproduct.save()
+
+        cart_item = Cartitem.objects.get(id=item.id)
+        product_variation = cart_item.variations.all()
+        orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+        orderproduct.variation.set(product_variation)
+        orderproduct.save()
+
+    
+    #raduce quenty of sold product
+        myproduct = product.objects.get(id=item.Product_id)
+        myproduct.stock -= item.quantity
+        myproduct.save()
+
+
+    #clear cart after order placed
+    Cartitem.objects.filter(user = request.user).delete()
+
+
+
+    mail_subject = 'ghostcart: Thank you for your order'
+    message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
+    to_email = request.user.email
+    print(to_email)
+    send_email = EmailMessage(mail_subject, message)
+    send_email.to = [to_email]
+    send_email.send()
+
+
+    data = {
+        'order_number': order.order_number,
+        'transID': mypayment.payment_id,
+    }
+
+
+    return JsonResponse(data)
 
 
 
@@ -68,4 +137,8 @@ def place_order(request,total = 0, quantity = 0):
             return render(request,'orders/payments.html',context)
         else:
             return redirect('home')
+        
+
+def ord_complete(request):
+    return render(request,'orders/ord_complete.html')
     
