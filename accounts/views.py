@@ -1,12 +1,13 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from carts.models import Cart, Cartitem
 from carts.views import _cart_id
+from orders.models import Order, OrderProduct
 from . import verify
-from . models import Account
+from . models import Account, UserProfile
 from django.contrib import auth, messages
 from store.models import product
-from . forms import VerifyForm, registration
+from . forms import UserForm, VerifyForm, registration,UserProfileForm
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 
@@ -139,8 +140,16 @@ def logout(request):
      messages.success(request,"logout sucessfully")
      return redirect("signin")
 
+@login_required(login_url='signin')
 def dashboard(request):
-    return render(request,'accounts/dashboard.html')
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id,is_ordered=True)
+    ordercount=orders.count()
+    userprofile = UserProfile.objects.get(user_id=request.user.id)
+    context={
+        'ordercount':ordercount,
+        'userprofile':userprofile
+    }
+    return render(request,'accounts/dashboard.html',context)
 
 
 
@@ -201,4 +210,78 @@ def resetpassword(request):
             return redirect('resetpassword')
     else:
      return render(request,'accounts/resetpassword.html')
+
+@login_required(login_url='signin')    
+def myorders(request):
+    orders = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+    context={
+        'orders': orders
+    }
+    return render(request,'accounts/myorders.html',context)
+
+@login_required(login_url='signin')    
+def edit_profile(request):
+    userprofile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == "POST":
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
+        if user_form.is_valid and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request,"Your profile has been Updated.")
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)
+    context = {
+        "user_form" : user_form,
+        "profile_form" : profile_form,
+        "userprofile" : userprofile
+    }
+    return render(request,'accounts/edit_profile.html',context)
+
+@login_required(login_url='signin')
+def change_password(request):
+    if request.method == 'POST':
+        currentpassword = request.POST['current_password']
+        newpassword = request.POST['new_password']
+        conformpassword = request.POST['conform_password']
+
+        myuser = Account.objects.get(email__exact=request.user.email)
+
+        if newpassword == conformpassword:
+            success = myuser.check_password(currentpassword)
+            if success:
+                myuser.set_password(newpassword)
+                myuser.save()
+                messages.success(request,'password updated sucessfully')
+                return redirect('change_password')
+            else:
+                messages.error(request,'Current Password is invalid!!!')
+                return redirect('change_password')
+        else:
+            messages.error(request,"Password Does't Match")
+            return redirect('change_password')
+    return render(request,'accounts/change_password.html')
+
+
+@login_required(login_url='signin')
+def order_details(request, order_id):
+    try:
+        ordr_product = OrderProduct.objects.filter(order__order_number=order_id)
+        order = Order.objects.get(order_number=order_id)
+        subtotal = 0
+        for i in ordr_product:
+            subtotal += i.product_price*i.quantity
+        context = {
+            'ordr_product': ordr_product,
+            'order': order,
+            'subtotal' : subtotal
+        }
+    except Order.DoesNotExist:
+        # Handle the case when the order does not exist
+        context = {
+            'error_message': 'Order does not exist.'
+        }
     
+    return render(request, 'accounts/order_details.html', context)
