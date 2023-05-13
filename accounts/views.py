@@ -6,7 +6,7 @@ from orders.models import Order, OrderProduct
 from . import verify
 from . models import Account, UserProfile
 from django.contrib import auth, messages
-from store.models import product
+from store.models import Wishlist, product
 from . forms import UserForm, VerifyForm, registration,UserProfileForm
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
@@ -285,3 +285,35 @@ def order_details(request, order_id):
         }
     
     return render(request, 'accounts/order_details.html', context)
+
+
+@login_required(login_url='signin')
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    context = {
+        'wishlist_items': wishlist_items
+    }
+    return render(request, 'store/wishlist.html',context)
+
+
+@login_required(login_url='signin')
+def add_to_wishlist(request, product_id):
+    myproduct = get_object_or_404(product, id=product_id)
+    created = Wishlist.objects.get_or_create(user=request.user, product=myproduct)
+    if created:
+        # Wishlist item was added successfully
+        messages.success(request, 'Product added to wishlist.')
+    else:
+        # Wishlist item already exists
+        messages.info(request, 'Product already in wishlist.')
+    return redirect('wishlist')
+
+
+
+@login_required(login_url='signin')
+def remove_from_wishlist(request, product_id):
+    myproduct = get_object_or_404(product, id=product_id)
+    Wishlist.objects.filter(user=request.user, product=myproduct).delete()
+    messages.success(request, 'Product removed from wishlist.')
+    return redirect('wishlist')
+

@@ -115,3 +115,9 @@ class ReviewRating(models.Model):
     def __str__(self):
         return self.subject
     
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

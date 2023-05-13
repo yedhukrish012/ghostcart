@@ -104,6 +104,9 @@
                                     {% comment %} <div class="p-status sale">sale</div> {% endcomment %}
                                 </figure>
                                 <div class="product-text">
+                                    {% if user.id is not None %}
+                                    <a href="{% url 'add_to_wishlist' product.id %}"><img src="{% static 'img/love.png' %}" alt="" width="20rem" ></a>
+                                    {% endif %}
                                     <a href="{{product.get_url}}">
                                         <h6>{{product.product_name}}</h6>
                                     </a>
