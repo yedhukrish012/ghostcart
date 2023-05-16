@@ -1,13 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'supbase.html' %}
 {% load static %} 
 {% block content %}
+<style>
+    .form-container {
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 400px;
+        text-align: center;
+    }
+</style>
 
 <h1>Edit Product</h1>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ product_form.as_p }}
-    <button type="submit">Save changes</button>
-</form>
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ product_form.as_p }}
+        <button type="submit">Save changes</button>
+    </form>
+</div>
 
 {% endblock content %}

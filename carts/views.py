@@ -1,11 +1,15 @@
-from django.http import HttpResponse
+import datetime
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
+from supuser.models import Coupon
 from . models import Cart, Cartitem
 from store.models import Variation, product
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-
+from datetime import datetime
 
 # Create your views here.
 def mycart(request,total = 0, quantity = 0, cart_items = None):
@@ -197,7 +201,9 @@ def checkout(request,total = 0, quantity = 0, cart_items = None):
             total += (item.Product.price*item.quantity)
             quantity += item.quantity
         tax = (.12 * total)
-        grand_total = total + tax    
+        grand_total = total + tax 
+        if(request.session.get('total')):
+            grand_total=request.session.get('total')   
     except ObjectDoesNotExist:
         pass
     context = {
@@ -209,3 +215,35 @@ def checkout(request,total = 0, quantity = 0, cart_items = None):
 
                }
     return render(request,'store/checkout.html',context)
+
+
+@require_POST
+def apply_coupon(request):
+    body = json.loads(request.body)
+    grand_total = int(body['grand_total'])
+    coupon_code = body['coupon']
+    try:
+        coupon = Coupon.objects.get(code__iexact=coupon_code)
+    except Coupon.DoesNotExist:
+        data = {
+            "total": grand_total,
+            "message": "Not a Valid Coupon"
+        }
+    else:
+        today = datetime.now().date()
+        start_date = coupon.active_date
+        expiry_date = coupon.expiry_date
+        min_amount = int(coupon.min_amount)
+        if min_amount < grand_total and start_date <= today <= expiry_date:
+            grand_total -= int(coupon.discount)
+            request.session['total'] = grand_total
+            data = {
+                "total": grand_total,
+                "message": f"{coupon.code} Applied"
+            }
+        else:
+            data = {
+                "total": grand_total,
+                "message": "Not a Valid Coupon"
+            }
+    return JsonResponse(data)

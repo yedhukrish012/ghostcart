@@ -3,15 +3,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.models import Account
+from orders.models import Order, OrderProduct
 from store.models import ProductImage, Variation, category,product
-from supuser.forms import CategoryForm, ProductForm, VariationForm, images
+from supuser.forms import CategoryForm, CouponForm, ProductForm, VariationForm, images
+
+from django.db.models import Q
+
+from supuser.models import Coupon
 
 # Create your views here.
 def supuser(request):
     if 'email' in request.session:
         return render(request,'supuser/suphome.html')
     return redirect('signin')
-
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------USER-MANAGE-ADMIN-side----------------------------------------------------------------------------------------
 
@@ -75,7 +80,7 @@ def del_category(request,id):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+#----------------------------------------------------product-manage--------------------------------------------------------------------------------------------
 
 def productmanage(request):
     if 'email' in request.session:
@@ -111,8 +116,6 @@ def add_product(request):
     return render(request, 'supuser/add_product.html', context)
    
    
-
-
 
 def del_product(request,id):
     if request.method == "POST":
@@ -184,6 +187,111 @@ def del_variation(request,id):
         vari = Variation.objects.get(id=id)
         vari.delete()
     return redirect('Variationmanage')
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+def orderslist(request):
+    orders = Order.objects.all().order_by('-created_at')
+    
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'supuser/orders_list.html', context)
+
+
+
+def order_details_admin(request, order_id):
+    try:
+        subtotal = 0
+        ordr_product = OrderProduct.objects.filter(order__order_number=order_id)
+        order = Order.objects.get(order_number=order_id)
+        for i in ordr_product:
+            subtotal += i.product_price*i.quantity
+        context = {
+            'ordr_product': ordr_product,
+            'order': order,
+            'subtotal' : subtotal
+        }
+    except Order.DoesNotExist:
+        # Handle the case when the order does not exist
+        context = {
+            'error_message': 'Order does not exist.'
+        }
+    
+    return render(request, 'supuser/order_details_admin.html', context)
+
+
+
+
+def change_status(request, order_id):
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        try:
+            order = Order.objects.get(id=order_id)
+            order.status = status
+            order.save()
+        except Order.DoesNotExist:
+            pass
+    
+    return redirect('orderslist')
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#-----------------------------------------------------Couppen--Management--------------------------------------------------------------------------------------------------------------------------------
+
+def coupen_manage(request):
+    coupens = Coupon.objects.all()
+    context = {
+        "coupens" : coupens
+    }
+    return render(request,'supuser/coupen_manage.html', context)
+
+
+
+def add_coupons(request):
+    if request.method == 'POST':
+        form = CouponForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('coupen_manage')
+    else:
+        form = CouponForm()
+
+    context = {'form': form}
+    return render(request, 'supuser/add_coupons.html', context)
+
+
+
+def del_coupons(request,id):
+    if request.method == "POST":
+        coup = Coupon.objects.get(id=id)
+        coup.delete()
+    return redirect('coupen_manage')
+
+
+def edit_coupons(request,id):
+    if request.method == "POST":
+        coup = Coupon.objects.get(id=id)
+        form = CouponForm(request.POST, instance=coup)
+        if form.is_valid:
+            form.save()
+        return redirect('coupen_manage')
+    else:
+        coup = Coupon.objects.get(id=id)
+        form = CouponForm(instance=coup)
+        context = {
+            "form" : form
+        }
+    return render(request, 'supuser/edit_coupon.html', context)
+    
+
+
+
+
+
 
 
 

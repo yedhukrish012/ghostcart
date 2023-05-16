@@ -88,15 +88,18 @@
         <div class="cart-btn">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="coupon-input">
-                        <input type="text" placeholder="Enter cupone code">
+                    <div class="cart__discount">
+                        <h6>Discount codes</h6>
+                            <input type="text" name="coupon" id="coupon" placeholder="Coupon code" style="padding: 5px; border: 1px solid #ccc;height:45px;">
+                            <button  onclick="applycoupon()" style='background-color: black; color: #fff; border: none; padding: 10px 20px; margin-left: 5px;'>Apply</button>
+                            <h6 id="coupon_id" style="padding-top:1rem;" ></h6>
                     </div>
                 </div>
                 <div class="col-lg-5 offset-lg-1 text-left text-lg-right">
                     <div class="site-btn update-btn ">
                         <div class="product-text"><a href="{% url 'store' %}">Update Cart</a></div>
                     </div>
-                    {% comment %} <div class="site-btn clear-btn"><a href="{% url 'del_cart' %}">Clear Cart</a></div> {% endcomment %}
+                     
                 </div>
             </div>
         </div>
@@ -145,7 +148,7 @@
                                         <td class="total">${{total}}</td>
                                         <td class="sub-total">${{tax}}</td>
                                         
-                                        <td class="total-cart-p">${{grand_total}}</td>
+                                        <td class="total-cart-p"><span id="grand_total">₹ {{grand_total}}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -162,4 +165,48 @@
     </div>
 </div>
 <!-- Cart Page Section End -->
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function applycoupon(){
+        var url = "{% url 'apply_coupon' %}"
+        var csrftoken = getCookie('csrftoken');
+        var coupon = document.getElementById("coupon").value
+        let coupon_id = document.getElementById("coupon_id")
+        let grand_total = {{grand_total}}
+            // Call your server to finalize the transaction 
+        fetch(url,{
+            method : "POST",
+            headers:{
+                "Content-type":"application/json",
+                "X-CSRFToken":csrftoken,
+            },
+            body:JSON.stringify({
+                coupon:coupon,
+                grand_total:grand_total
+            }),
+        })
+        .then(async function (response){
+            const data =await response.json()
+            if(data){
+                coupon_id.innerHTML = data.message
+                document.getElementById('grand_total').innerText = `₹ ${data.total}`
+            }
+        });
+    }
+</script>
 {% endblock content %}

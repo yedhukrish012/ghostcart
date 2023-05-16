@@ -132,6 +132,7 @@ def signin(request):
                  return redirect('signin')
         return render(request, 'accounts/login.html')
 
+
 @login_required(login_url = "signin")
 def logout(request):
      if 'email' in request.session:
@@ -139,6 +140,8 @@ def logout(request):
      auth.logout(request)
      messages.success(request,"logout sucessfully")
      return redirect("signin")
+
+
 
 @login_required(login_url='signin')
 def dashboard(request):
@@ -316,4 +319,10 @@ def remove_from_wishlist(request, product_id):
     Wishlist.objects.filter(user=request.user, product=myproduct).delete()
     messages.success(request, 'Product removed from wishlist.')
     return redirect('wishlist')
+
+
+
+
+
+
 

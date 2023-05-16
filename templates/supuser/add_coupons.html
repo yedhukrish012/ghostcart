@@ -1,0 +1,46 @@
+
+{% extends 'supbase.html' %}
+{% load static %} 
+{% block content %}
+<style>
+    .container-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-container {
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f8f8f8;
+    }
+
+    .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-container .btn-primary {
+        width: 100%;
+    }
+</style>
+<br>
+<div>
+    <div class="container-box">
+        <div class="form-container">
+            <h1>Add Coupon</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
