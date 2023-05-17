@@ -5,6 +5,7 @@
         <a class="list-group-item {% if 'myorders/' in request.path %}active{% endif %}" href="{% url 'myorders' %}">My Orders</a>
         <a class="list-group-item {% if 'edit_profile' in request.path %}active{% endif %}" href="{% url 'edit_profile' %}"> Edit profil </a>
         <a class="list-group-item {% if 'change_password' in request.path %}active{% endif %}" href="{% url 'change_password' %}">Change Password </a>
+        <a class="list-group-item {% if '/my_addresses/' in request.path %}active{% endif %}" href="{% url 'my_addresses'%}"> Address Book </a>
     </ul>
     <br>
     <!--   SIDEBAR .//END   -->

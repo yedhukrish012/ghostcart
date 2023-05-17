@@ -24,6 +24,42 @@
     <!-- Cart Total Page Begin -->
     <section class="cart-total-page spad">
         <div class="container">
+        <div>
+             <h6 class="checkout__title">Saved Address</h6>
+                            <div class="card-body">
+                                <div class="row"> 
+                                    {% if addresses %}
+                                    {% for address in addresses %}
+                                    <div class="col-md-4"> 
+                                        <div class="card {% if address.status %}border-secondary shadow{% endif %} address{{address.id}} address"> 
+                                            <div class="card-body">
+                                                <strong>{{address.full_name}}</strong>
+                                                <p class="my-0 card-text">{{address.address_line_1}}</p>
+                                                <p class="my-0 card-text">{{address.address_line_2}}</p>
+                                                <p class="my-0 card-text">{{address.city}},{{address.state}}</p>
+                                                <p class="my-0 card-text">{{address.country}}, PIN :{{address.pincode}}</p>
+                                                <p class="my-0 card-text">{{address.email}}</p>
+                                                <p class="my-0 card-text">{{address.phone}}</p>
+                                            </div>
+                                            {% if address.status %}
+                                            <div class="card-footer">
+                                                <i class = "fa fa-check-circle text-success check{{address.id}} check"></i>
+                                                <button style="display:none;" data-address="{{address.id}}" class="btn btn-sm btn-info activate-address btn{{address.id}} actbtn" onclick="changeAdd( '{{address.first_name}}', '{{address.last_name}}', '{{address.address_line_1}}', '{{address.address_line_2}}', '{{address.city}}', '{{address.state}}', '{{address.country}}', '{{address.pincode}}', '{{address.phone}}', '{{address.email}}')">Make default</button>
+                                            </div>
+                                            {% else %}
+                                            <div class="card-footer footer{{address.id}}">
+                                                <i style="display:none;" class = "fa fa-check-circle text-success check{{address.id}} check"></i>
+                                                <button data-address="{{address.id}}" class="btn btn-sm btn-info activate-address btn{{address.id}} actbtn" onclick="changeAdd( '{{address.first_name}}', '{{address.last_name}}', '{{address.address_line_1}}', '{{address.address_line_2}}', '{{address.city}}', '{{address.state}}', '{{address.country}}', '{{address.pincode}}', '{{address.phone}}', '{{address.email}}')">Make default</button>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% else %}
+                                        <p>Your Address list is empty.!</p>
+                                    {% endif %} 
+                                </div>
+                            </div>
             <form action="{% url 'place_order' %}" method = "POST" class="checkout-form">
                 {% csrf_token %} 
                 <div class="row">
@@ -36,10 +72,10 @@
                                 <p class="in-name">Name*</p>
                             </div>
                             <div class="col-lg-5">
-                                <input type="text" placeholder="first_name" name="first_name">
+                                <input type="text" placeholder="first_name" name="first_name" id="first_name" value="{{cadd.first_name}}">
                             </div>
                             <div class="col-lg-5">
-                                <input type="text" placeholder="last_name" name="last_name">
+                                <input type="text" placeholder="last_name"name="last_name" id="last_name" value="{{cadd.last_name}}">
                             </div>
                         </div>
                         <div class="row">
@@ -47,16 +83,16 @@
                                 <p class="in-name">Street Address*</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder="Street Address" class="checkout__input__add" name="address_line_1">
-                                <input type="text" placeholder="Apartment, suite, unite ect (optinal)" name="address_line_2">
+                                <input type="text" placeholder="Street Address" class="checkout__input__add" name="address_line_1" id="adr-line-1" value="{{cadd.address_line_1}}" >
+                                <input type="text" placeholder="Apartment, suite, unite ect (optinal)" name="address_line_2" id="adr-line-2" value="{{cadd.address_line_2}}" >
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-2">
-                                <p class="in-name">Country</p>
+                                <p class="in-name">Town/City</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder="Country"  name="country">
+                                <input type="text" placeholder="Country"  name="city" id="city"  value="{{cadd.city}}">
                             </div>
                         </div>
                         <div class="row">
@@ -64,15 +100,15 @@
                                 <p class="in-name">state</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder= "state" name="state">
+                                <input type="text" placeholder= "state" name="state" id="state"  value="{{cadd.state}}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-2">
-                                <p class="in-name">City</p>
+                                <p class="in-name">Country</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder= "City"  name="city">
+                                <input type="text" placeholder= "City"  name="country" id="country" value="{{cadd.country}}" >
                             </div>
                         </div>
                         <div class="row">
@@ -80,7 +116,7 @@
                                 <p class="in-name">Postcode / ZIP</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder = "postcode" name="pincode">
+                                <input type="text" placeholder = "postcode" name="pincode" id="pincode" value="{{cadd.pincode}}">
                             </div>
                         </div>
                         <div class="row">
@@ -88,7 +124,7 @@
                                 <p class="in-name">Phone*</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder= "Phone" name="phone">
+                                <input type="text" placeholder= "Phone" name="phone" id="phone" value="{{cadd.phone}}">
                             </div>
                         </div>
                         <div class="row">
@@ -96,7 +132,7 @@
                                 <p class="in-name">Email</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder = "Email" name="email">
+                                <input type="text" placeholder = "Email" name="email" id="email" value="{{cadd.email}}">
                             </div>
                         </div>
                         <div class="row">
@@ -104,7 +140,7 @@
                                 <p class="in-name">Order Note</p>
                             </div>
                             <div class="col-lg-10">
-                                <input type="text" placeholder = " Note about your order, e.g, special note for delivery" name="order_note">
+                                <input type="text" placeholder="Notes about your order, e.g. special notes for delivery.">
                             </div>
                         </div>
                         <div class="row">
@@ -168,14 +204,68 @@
                                     <input type="radio" id="two">
                                 </li>
                             </ul>
-                            <button type="submit" >Place your order</button>
+                            <button type="submit" name="submit" class="site-btn" >Place your order</button>
                         </div>
                     </div>
                 </div>
+              </div>
             </form>
         </div>
     </section>
     <!-- Cart Total Page End -->
+
+
+    <script>
+        function changeAdd(first, last, ad1, ad2, cty,state1,cntry,pcode,ph,email1) {
+            let first_name = document.getElementById("first_name");
+            let last_name = document.getElementById("last_name");
+            let add1 = document.getElementById("adr-line-1");
+            let add2 = document.getElementById("adr-line-2");
+            let state = document.getElementById("state");
+            let city = document.getElementById("city");
+            let country = document.getElementById("country");
+            let phone = document.getElementById("phone");
+            let email = document.getElementById("email");
+            let pincode = document.getElementById("pincode");
+            first_name.value = first;
+            last_name.value = last;
+            add1.value = ad1;
+            add2.value = ad2;
+            city.value = cty;
+            state.value = state1;
+            country.value = cntry;
+            phone.value = ph;
+            email.value = email1;
+            pincode.value = pcode;
+          }
+    
+    $(document).on('click','.activate-address',function(){
+        var to_url = "{% url 'activate-address' %}"
+        var _aId=$(this).attr('data-address');
+        var _vm=$(this);
+    
+        $.ajax({
+            url:to_url,
+            data:{
+                'id':_aId,
+            },
+            dataType:'json',
+            success:function(res){
+                if(res.bool==true){
+    
+                    $(".address").removeClass('shadow border-secondary');
+                    $(".address"+_aId).addClass('shadow border-secondary');
+                    
+                    $(".check").hide();
+                    $(".actbtn").show();
+    
+                    $(".check"+_aId).show();
+                    $(".btn"+_aId).hide();
+                }
+            }
+        });
+    });
+    </script>
 
 {% include 'footer.html' %}
 {% endblock content %}

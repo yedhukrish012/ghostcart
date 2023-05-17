@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+
+<section class="section-conten padding-y bg p-5">
+
+    <div class="container">
+        <div class="row">
+        {% include 'dashbord_sidebar.html' %}
+        <main class="col-md-9">
+            <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Hi, {{user.first_name}}</strong>
+                <span>Your saved Address</span>
+                <a href="{% url 'add_address' %}" class="float-right btn btn-success"><i class="fa fa-plus"></i></a>
+            </header>
+            <div class="card-body">
+                <div class="row"> 
+                    {% if addresses %}
+                    {% for address in addresses %}
+                    <div class="col-md-4"> 
+                        <div class="card {% if address.status %}border-secondary shadow{% endif %} address{{address.id}} address"> 
+                            <div class="card-body">
+                                <strong>{{address.full_name}}</strong>
+                                <p class="my-0 card-text">{{address.address_line_1}}</p>
+                                <p class="my-0 card-text">{{address.address_line_2}}</p>
+                                <p class="my-0 card-text">{{address.city}},{{address.state}}</p>
+                                <p class="my-0 card-text">{{address.country}}, PIN :{{address.pincode}}</p>
+                                <p class="my-0 card-text">{{address.email}}</p>
+                                <p class="my-0 card-text">{{address.phone}}</p>
+                            </div>
+                            {% if address.status %}
+                            <div class="card-footer">
+                                <i class = "fa fa-check-circle text-success check{{address.id}} check"></i>
+                                <button style="display:none;" data-address="{{address.id}}" class="btn btn-sm btn-info activate-address btn{{address.id}} actbtn" >Make default</button>
+                            </div>
+                            {% else %}
+                            <div class="card-footer footer{{address.id}}">
+                                <i style="display: none;" class="fa fa-check-circle text-success check{{address.id}} check"></i>
+                                <button data-address="{{address.id}}" class="btn btn-sm btn-info activate-address btn{{address.id}} actbtn {% if address.is_activated %}active{% endif %}">Make default</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <h3 class="text-center">Your Address Book is Empty..!</h3>
+                    {% endif %} 
+                </div> <!-- row.// -->
+            </div> <!-- card-body .// -->
+            
+            </article> <!-- order-group.// --> 
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    </section>
+    
+
+    <script>
+        $(document).on('click','.activate-address',function(){
+            var to_url = "{% url 'activate-address' %}"
+            var _aId=$(this).attr('data-address');
+            var _vm=$(this);
+        
+            $.ajax({
+                url:to_url,
+                data:{
+                    'id':_aId,
+                },
+                dataType:'json',
+                success:function(res){
+                    if(res.bool==true){
+                        $(".address").removeClass('shadow border-secondary');
+                        $(".address"+_aId).addClass('shadow border-secondary');
+                        
+                        $(".check").hide();
+                        $(".actbtn").show();
+        
+                        $(".check"+_aId).show();
+                        $(".btn"+_aId).hide();
+                    }
+                }
+            });
+        });
+        </script>
+
+
+{% endblock content %}

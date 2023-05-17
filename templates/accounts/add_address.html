@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="section-conten padding-y bg p-5">
+
+    <div class="container">
+        <div class="row">
+        {% include 'dashbord_sidebar.html' %}
+        <main class="col-md-9">
+            <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Add New Address</strong>
+            </header>
+            <div class="card-body">
+                <div class="row"> 
+                    <div class="col-md-12"> 
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% comment %} ======================================= {% endcomment %}
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="inputEmail4">First Name</label>
+                                    {{form.first_name}}
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Last Name</label>
+                                    {{form.last_name}}
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="inputAddress">Address</label>
+                                  {{form.address_line_1}}
+                                </div>
+                                <div class="form-group">
+                                  <label for="inputAddress2">Address 2</label>
+                                  {{form.address_line_2}}
+                                </div>
+                                <div class="form-row">
+                                  <div class="form-group col-md-4">
+                                    <label for="inputCity">City</label>
+                                    {{form.city}}
+                                  </div>
+                                  <div class="form-group col-md-4">
+                                    <label for="inputCity">State</label>
+                                    {{form.state}}
+                                  </div>
+                                  <div class="form-group col-md-4">
+                                    <label for="inputCity">Country</label>
+                                    {{form.country}}
+                                  </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                      <label for="inputCity">Phone Number</label>
+                                      {{form.phone}}
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                      <label for="inputCity">E-mail</label>
+                                      {{form.email}}
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                      <label for="inputCity">Pincode</label>
+                                      {{form.pincode}}
+                                    </div>
+                                  </div>
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        {{form.status}}
+                                        <label class="form-check-label" for="exampleCheck1">Set as Default Address</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            {% comment %} ======================================= {% endcomment %}
+                            
+                        </form>
+                    </div>
+                </div> <!-- row.// -->
+            </div> <!-- card-body .// -->
+            
+            </article> <!-- order-group.// --> 
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+    </section>
+
+{% endblock content %}

@@ -1,13 +1,14 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from carts.models import Cart, Cartitem
 from carts.views import _cart_id
 from orders.models import Order, OrderProduct
 from . import verify
-from . models import Account, UserProfile
+from . models import Account, AddressBook
 from django.contrib import auth, messages
 from store.models import Wishlist, product
-from . forms import UserForm, VerifyForm, registration,UserProfileForm
+from . forms import AddressBookForm, UserForm, VerifyForm, registration
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 
@@ -147,10 +148,8 @@ def logout(request):
 def dashboard(request):
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id,is_ordered=True)
     ordercount=orders.count()
-    userprofile = UserProfile.objects.get(user_id=request.user.id)
     context={
         'ordercount':ordercount,
-        'userprofile':userprofile
     }
     return render(request,'accounts/dashboard.html',context)
 
@@ -224,22 +223,9 @@ def myorders(request):
 
 @login_required(login_url='signin')    
 def edit_profile(request):
-    userprofile = get_object_or_404(UserProfile, user=request.user)
-    if request.method == "POST":
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
-        if user_form.is_valid and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request,"Your profile has been Updated.")
-            return redirect('edit_profile')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = UserProfileForm(instance=userprofile)
+    user_form = UserForm(instance=request.user)
     context = {
         "user_form" : user_form,
-        "profile_form" : profile_form,
-        "userprofile" : userprofile
     }
     return render(request,'accounts/edit_profile.html',context)
 
@@ -320,6 +306,36 @@ def remove_from_wishlist(request, product_id):
     messages.success(request, 'Product removed from wishlist.')
     return redirect('wishlist')
 
+
+def my_addresses(request):
+    addresses = AddressBook.objects.filter(user= request.user).order_by('-id')
+    context = {
+        'addresses':addresses
+    }
+    return render(request, 'accounts/my_addresses.html',context)
+
+
+def  add_address(request):
+    form = AddressBookForm()
+    if request.method == "POST":
+        form = AddressBookForm(request.POST)
+        if form.is_valid():
+            saveform=form.save(commit=False)
+            saveform.user= request.user
+            saveform.save()
+            messages.success(request,"New Address added sucessfully.!")
+            return redirect('my_addresses')
+    context={
+        'form':form
+    }
+    return render(request, 'accounts/add_address.html',context)
+
+def activate_address(request):
+    a_id = request.GET['id']
+    AddressBook.objects.update(status= False)
+    AddressBook.objects.filter(id=a_id).update(status=True)
+  
+    return JsonResponse({'bool':True})
 
 
 

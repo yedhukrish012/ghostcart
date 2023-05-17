@@ -3,6 +3,7 @@ from django.core.mail import EmailMessage
 import json
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from accounts.models import AddressBook
 from carts.models import Cartitem
 from orders.models import Order, OrderProduct, Payment
 from store.models import product
@@ -85,7 +86,6 @@ def payments(request):
 
 def place_order(request,total = 0, quantity = 0):
     current_user = request.user
-
     cart_items = Cartitem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:
@@ -98,8 +98,11 @@ def place_order(request,total = 0, quantity = 0):
         quantity += item.quantity
     tax = (.12 * total)
     grand_total = total + tax 
+
     if(request.session.get('total')):
             grand_total=request.session.get('total')
+
+    active_Addr = AddressBook.objects.filter(user=request.user, status = True).first()
 
     if request.method == "POST":
         form = OrderForm(request.POST)
@@ -167,3 +170,9 @@ def ord_complete(request):
     except(Payment.DoesNotExist,Order.DoesNotExist):
         return redirect('home')
     
+
+
+
+
+
+

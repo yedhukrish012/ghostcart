@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
+from accounts.models import AddressBook
 from supuser.models import Coupon
 from . models import Cart, Cartitem
 from store.models import Variation, product
@@ -188,7 +189,10 @@ def del_cart(request,product_id,cart_item_id):
 
 
 @login_required(login_url='signin')
-def checkout(request,total = 0, quantity = 0, cart_items = None):
+def checkout(request):
+    total=0
+    quantity= 0
+    cart_items=None
     tax = 0
     grand_total = 0
     try:
@@ -202,19 +206,28 @@ def checkout(request,total = 0, quantity = 0, cart_items = None):
             quantity += item.quantity
         tax = (.12 * total)
         grand_total = total + tax 
+
         if(request.session.get('total')):
-            grand_total=request.session.get('total')   
-    except ObjectDoesNotExist:
+            grand_total=request.session.get('total')
+
+        addresses = AddressBook.objects.filter(user=request.user).order_by('-id')
+        cadd = AddressBook.objects.filter(user=request.user, status= True).first()
+
+    except :
         pass
     context = {
+
         'total':total,
         'quantity' : quantity,
         'cart_items' : cart_items,
         'tax' : tax,
         'grand_total' : grand_total,
+        'addresses':addresses,
+        'cadd':cadd,
 
                }
     return render(request,'store/checkout.html',context)
+
 
 
 @require_POST

@@ -3,7 +3,7 @@ from django import forms
 from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms.utils import ErrorList
-from . models import Account, UserProfile
+from . models import Account, AddressBook
 
 
 class registration(forms.ModelForm):
@@ -39,16 +39,22 @@ class UserForm(forms.ModelForm):
         }
 
   
-class UserProfileForm(forms.ModelForm):
-    profile_picture = forms.ImageField(required=False,error_messages= {'invalid':("image file only")}, widget=forms.FileInput)
+
+class AddressBookForm(forms.ModelForm):
+    # address =forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-1', 'placeholder':'Enter Address'}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'First Name'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'Last Name'}))
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'Phone Number'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'E-mail'}))
+    address_line_1 = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'House No & Locality'}))
+    address_line_2 = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'Address line 2(optional)'}))
+    city = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'City'}))
+    state = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'State'}))
+    country = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'Country'}))
+    pincode = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control my-2', 'placeholder':'Pincode'}))
+    status = forms.BooleanField(required=False,widget=forms.CheckboxInput())
+    
     class Meta:
-        model = UserProfile
-        fields = ("address_line1","address_line2","city","state","country","profile_picture")
-        widgets = {
-            "address_line1": forms.TextInput(attrs={"class": "form-control", 'placeholder':'dude'}),
-            "address_line2": forms.TextInput(attrs={"class": "form-control", 'placeholder':'Deo'}),
-            "city": forms.TextInput(attrs={"class": "form-control", 'placeholder':'Alappuzha'}),
-            "state": forms.TextInput(attrs={"class": "form-control", 'placeholder':'Kerala'}),
-            "country": forms.TextInput(attrs={"class": "form-control", 'placeholder':'India'}),
-            "profile_picture": forms.FileInput(attrs={"class": "form-control-file"}),
-        }
+        model = AddressBook
+        # fields = ['first_name','last_name','phone','email','address_line_1','address_line_2','city','state','country','pincode','status']
+        exclude = ("user",)
