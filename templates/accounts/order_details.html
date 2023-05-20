@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
-{%  load static %} 
+{% load static %} 
 {% block content %}
-{% include 'navbar.html' %}
+
 <!-- Page Add Section Begin -->
+<div class="d-flex justify-content-between">
+    <a href="{% url 'myorders' %}"><i class="fa fa-chevron-left" style="color: #000;"> BACK</i></a>
+    <button class="btn btn-secondary btn-sm" onclick="downloadPDF()"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
+</div>
 
-
-<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
-    <div class="row invoice row-printable">
+<div class="container" style="margin: 0 auto; width: 50%; padding: 50px; background: #f1f1f1; margin-top: 50px; margin-bottom: 50px; border: 1px solid #ccc;">
+    <div class="row invoice row-printable" id="topdf">
         <div class="col-md-12">
             <!-- col-lg-12 start here -->
             <div class="panel panel-default plain" id="dash_0">
@@ -16,7 +19,9 @@
                         <!-- Start .row -->
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"> <img src="{% static 'img/logo1.png' %}" alt="" width="88rem" ></div>
+                            <div class="invoice-logo"> 
+                                <img src="{% static 'img/logo1.png' %}" alt="" width="88rem" >
+                            </div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -27,7 +32,7 @@
                                     <li>{{order.first_name}}</li>
                                     <li>{{order.full_address}}</li>
                                     <li>{{order.city}}, {{order.state}}, {{order.country}}</li>
-                                    <li>PIN : {{order.pincode}}</li>
+                                    <li>PIN: {{order.pincode}}</li>
                                 </ul>
                             </div>
                         </div>
@@ -56,16 +61,17 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {%  for item in ordr_product %}
+                                            {% for item in ordr_product %}
                                             <tr>
-                                                <td>{{item.product.product_name}}
-                                                <p class="text-muted small">
-                                                    {% if item.variation.all %}
-                                                        {% for i in item.variation.all %}
-                                                            {{i.variation_category | capfirst }} : {{i.variation_value | capfirst }}<br>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </p>
+                                                <td>
+                                                    {{item.product.product_name}}
+                                                    <p class="text-muted small">
+                                                        {% if item.variation.all %}
+                                                            {% for i in item.variation.all %}
+                                                                {{i.variation_category | capfirst}}: {{i.variation_value | capfirst}}<br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </p>
                                                 </td>
                                                 <td class="text-center">{{item.quantity}}</td>
                                                 <td class="text-center">$ {{item.product_price}}</td>
@@ -103,8 +109,29 @@
         </div>
         <!-- col-lg-12 end here -->
     </div>
-    </div>
+</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPDF() {
+    const element = document.getElementById('topdf');
 
+    // configure the html2pdf options
+    const options = {
+        filename: 'Invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // convert the element to PDF
+    html2pdf().from(element).set(options).save();
+}
+</script>
 
 {% endblock content %}
+
+
+
+
+

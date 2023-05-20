@@ -1,12 +1,14 @@
-from django.forms import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
 
+import json
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from  django.core import serializers
 from accounts.models import Account
 from orders.models import Order, OrderProduct
 from store.models import ProductImage, Variation, category,product
 from supuser.forms import CategoryForm, CouponForm, ProductForm, VariationForm, images
-
+from datetime import datetime,timedelta, timezone
 from django.db.models import Q
 
 from supuser.models import Coupon
@@ -14,8 +16,65 @@ from supuser.models import Coupon
 # Create your views here.
 def supuser(request):
     if 'email' in request.session:
-        return render(request,'supuser/suphome.html')
-    return redirect('signin')
+        orders = Order.objects.all().order_by('-created_at')[:5]
+
+    myproducts = product.objects.all().order_by('-id')
+    product_count = myproducts.count()
+    
+    categories = category.objects.all()
+    category_count = categories.count()
+    
+    total_order=Order.objects.all()
+    total_orders=total_order.count()
+    
+    today = datetime.today()
+    start_of_week = today - timedelta(days=today.weekday())
+    dates = [start_of_week + timedelta(days=i) for i in range(7)]
+    sales = []
+    for date in dates:
+        Orders = OrderProduct.objects.filter(
+            ordered=True,
+            created_at__year=date.year,
+            created_at__month=date.month,
+            created_at__day=date.day,
+        )
+        total_sales = sum(order.product_price * order.quantity for order in Orders)
+        sales.append(total_sales)
+        sums = sum(sales)
+        context = {
+        'orders': orders,
+        # 'ordered_product':ordered_product,
+        'product_count':product_count,
+        'category_count':category_count,
+        'products': myproducts,
+        'total_orders':total_orders,
+        'dates':dates,
+        'sales':sales,
+        'sums':sums,
+         }
+        return render(request,'supuser/suphome.html',context)
+    else:
+       return redirect('signin')
+    
+
+    
+def add_order_filter(request):
+    body = json.loads(request.body)
+    try:
+        start_date =datetime.strptime(body['from'],'%Y-%m-%d')
+        end_date = datetime.strptime(body['to'],'%Y-%m-%d')
+    except ValueError:
+        end_date = timezone.now()
+        start_date = end_date - timedelta(days=end_date.weekday())
+    try:
+        orders = Order.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
+        json_data = serializers.serialize('json', orders)
+    except Order.DoesNotExist:
+        orders = None     
+    data ={
+             "order":json_data,
+            }
+    return JsonResponse(data)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------USER-MANAGE-ADMIN-side----------------------------------------------------------------------------------------

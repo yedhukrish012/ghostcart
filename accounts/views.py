@@ -338,6 +338,19 @@ def activate_address(request):
     return JsonResponse({'bool':True})
 
 
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    if order.status == 'Cancelled':
+        messages.warning(request, "This order has already been cancelled.")
+    else:
+        order.status = 'Cancelled'
+        order.save()
+        messages.success(request, "Order successfully cancelled.")
+    
+    return redirect('myorders')
+
+
 
 
 

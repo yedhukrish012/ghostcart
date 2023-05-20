@@ -36,8 +36,7 @@
                             {% for category in links %}
                             <li><a href="{{ category.get_absolute_url }}">{{ category.category_name }}</a></li>
                             {% endfor %}
-                             <li><a href="shopping-cart.html">Shopping Card</a></li>
-                            <li><a href="check-out.html">Check out</a></li> 
+                             <li><a href="shopping-cart.html"></a></li> 
                         </ul>
                     </li>
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
@@ -56,19 +55,19 @@
             <div class="col-md-4">
                 <div class="header-item">
                     <img src="{% static 'img/icons/delivery.png' %}" alt="">
-                    <p>Free shipping on orders over $30 in USA</p>
+                    <p>Free shipping on orders over </p>
                 </div>
             </div>
             <div class="col-md-4 text-left text-lg-center">
                 <div class="header-item">
                     <img src="{% static 'img/icons/voucher.png' %}" alt="">
-                    <p>20% Student Discount</p>
+                    <p>$100 off on products </p>
                 </div>
             </div>
             <div class="col-md-4 text-left text-xl-right">
                 <div class="header-item">
                 <img src="{% static 'img/icons/sales.png' %}" alt="">
-                <p>30% off on dresses. Use code: 30OFF</p>
+                <p>$100 off on dresses. Use code: vamp</p>
             </div>
             </div>
         </div>

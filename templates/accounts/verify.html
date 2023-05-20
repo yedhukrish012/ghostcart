@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Verify your account</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Verify</button>
-  </form>
-{% endblock %} 
-
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+      <div class="card shadow p-4">
+        <h4 class="card-title text-center"><u>Verify your account</u></h4>
+        <form method="post" class="verify-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="{{ form.code.id_for_label }}">Enter code:</label>
+            {{ form.code }}
+            <small class="form-text text-muted">{{ form.code.help_text }}</small>
+          </div>
+          <button type="submit" class="btn btn-primary">Verify</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -58,7 +58,7 @@
                         <td class="price-col">${{item.Product.price}}</td>
                         <td class="quantity-col">
                             <div class="input-group">
-                                <span class="input-group-text">Product Count:</span>
+                                <span class="input-group-text">
                                 <div class="d-inline-block">
                                   <a href="{% url 'remove_cart' item.Product.id item.id %}" class="btn btn-outline-secondary" type="button" id="minus">-</a>
                                 </div>
@@ -74,8 +74,9 @@
                                     <button class="btn btn-outline-secondary" type="submit" id="plus">+</button>
                                   </form>
                                 </div>
+                               </span>
                               </div>
-                              
+                  
                         </td>
                         <td class="total">${{item.sub_total}}</td>
                         <td class="product-close"><a href="{% url 'del_cart' item.Product.id item.id %}" onclick="return confirm("Are You Sure You Want To Remove It")" class= "btn btn-danger">Remove</a></td>
@@ -108,30 +109,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="shipping-info">
-                        <h5>Choose a shipping</h5>
-                        <div class="chose-shipping">
-                            <div class="cs-item">
-                                <input type="radio" name="cs" id="one">
-                                <label for="one" class="active">
-                                    Free Standard shhipping
-                                    <span>Estimate for New York</span>
-                                </label>
-                            </div>
-                            <div class="cs-item">
-                                <input type="radio" name="cs" id="two">
-                                <label for="two">
-                                    Next Day delievery $10
-                                </label>
-                            </div>
-                            <div class="cs-item last">
-                                <input type="radio" name="cs" id="three">
-                                <label for="three">
-                                    In Store Pickup - Free
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="total-info">
                         <div class="total-table">
                             <table>

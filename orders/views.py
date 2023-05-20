@@ -61,15 +61,14 @@ def payments(request):
 
 
     #send order placed resive mail
-    # mail_subject = 'ghostcart : Thank you for your Order!'
-    # message = render_to_string( 'orders/order_resive_email.html', {
-    #     'user':  request.user,
-    #     'order':order,
-    #     })
-    # to_email = request.user.email
-    # print(to_email)
-    # send_email = EmailMessage(mail_subject,message,to=[to_email])
-    # send_email.send()
+
+    mail_subject = 'ghostcart: Thank you for your order'
+    message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
+    to_email = request.user.email
+    print(to_email)
+    send_email = EmailMessage(mail_subject, message)
+    send_email.to = [to_email]
+    send_email.send()
 
 
 

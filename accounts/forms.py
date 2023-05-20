@@ -26,7 +26,12 @@ class registration(forms.ModelForm):
             raise forms.ValidationError("Password and confirm password don't match!")
 
 class VerifyForm(forms.Form):
-    code = forms.CharField(max_length=8, required=True, help_text='Enter code')
+    code = forms.CharField(
+        max_length=8,
+        required=True,
+        help_text='Enter code',
+        widget=forms.TextInput(attrs={'class': 'custom-class', 'placeholder': 'Enter code here'})
+    )
 
 class UserForm(forms.ModelForm):
     class Meta:

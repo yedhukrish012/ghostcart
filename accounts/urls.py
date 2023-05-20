@@ -17,6 +17,7 @@ urlpatterns = [
     path('edit_profile/',views.edit_profile,name="edit_profile"),
     path('change_password/',views.change_password,name="change_password"),
     path('order_details/<int:order_id>/',views.order_details,name="order_details"),
+    path('order_details/cancel_order/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('my_addresses/',views.my_addresses,name='my_addresses'),
     path('my_addresses/add_address',views.add_address,name='add_address'),
     path('activate-address/',views.activate_address,name='activate-address'),

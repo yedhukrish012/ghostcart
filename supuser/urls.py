@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('',views.supuser,name="supuser"),
+    path('add_order_filter', views.add_order_filter, name="add_order_filter"),
+
     path('manage/', views.usermanage, name='manage'),
     path('manage/block/<int:id>/',views.block_user, name='block_user'),
     path('manage/unblock/<int:id>/',views.unblock_user, name='unblock_user'),
