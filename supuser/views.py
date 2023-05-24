@@ -17,44 +17,48 @@ from supuser.models import Coupon
 def supuser(request):
     if 'email' in request.session:
         orders = Order.objects.all().order_by('-created_at')[:5]
+    
+        users = Account.objects.all()
+        users_count = users.count()
 
-    myproducts = product.objects.all().order_by('-id')
-    product_count = myproducts.count()
+        myproducts = product.objects.all().order_by('-id')
     
-    categories = category.objects.all()
-    category_count = categories.count()
+        categories = category.objects.all()
+        category_count = categories.count()
     
-    total_order=Order.objects.all()
-    total_orders=total_order.count()
+        total_order = Order.objects.all()
+        total_orders = total_order.count()
     
-    today = datetime.today()
-    start_of_week = today - timedelta(days=today.weekday())
-    dates = [start_of_week + timedelta(days=i) for i in range(7)]
-    sales = []
-    for date in dates:
-        Orders = OrderProduct.objects.filter(
-            ordered=True,
-            created_at__year=date.year,
-            created_at__month=date.month,
-            created_at__day=date.day,
-        )
-        total_sales = sum(order.product_price * order.quantity for order in Orders)
-        sales.append(total_sales)
+        today = datetime.today()
+        start_of_week = today - timedelta(days=today.weekday())
+        dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        sales = []
+        for date in dates:
+            Orders = OrderProduct.objects.filter(
+                ordered=True,
+                created_at__year=date.year,
+                created_at__month=date.month,
+                created_at__day=date.day,
+            )
+            total_sales = sum(order.product_price * order.quantity for order in Orders)
+            sales.append(total_sales)
         sums = sum(sales)
+        product_count = myproducts.exclude(orderproduct__ordered=True).count()
         context = {
-        'orders': orders,
-        # 'ordered_product':ordered_product,
-        'product_count':product_count,
-        'category_count':category_count,
-        'products': myproducts,
-        'total_orders':total_orders,
-        'dates':dates,
-        'sales':sales,
-        'sums':sums,
-         }
-        return render(request,'supuser/suphome.html',context)
+            'orders': orders,
+            'product_count': product_count,
+            'category_count': category_count,
+            'products': myproducts,
+            'total_orders': total_orders,
+            "users_count": users_count,
+            'dates': dates,
+            'sales': sales,
+            'sums': sums,
+        }
+        return render(request, 'supuser/suphome.html', context)
     else:
-       return redirect('signin')
+        return redirect('signin')
+
     
 
     

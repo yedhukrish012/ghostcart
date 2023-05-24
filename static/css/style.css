@@ -1326,6 +1326,7 @@ ol {
 }
 
 .product-content h2 {
+	position: relative;
 	color: #1e1e1e;
 	font-weight: 700;
 	margin-bottom: 12px;
@@ -2362,3 +2363,5 @@ ol {
 		padding: 10px 0;
 	}
 }
+
+

@@ -353,5 +353,14 @@ def cancel_order(request, order_id):
 
 
 
+def contact(request):
+    return render(request, 'accounts/contact.html')
+
+
+
+
+
+
+
 
 

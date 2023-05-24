@@ -2,6 +2,9 @@
 {% load static %}
 {% block content %}
 {% include 'navbar.html' %}
+
+
+
 <section class="page-add">
     <div class="container">
         <div class="row">
@@ -28,16 +31,16 @@
                 <div class="col-lg-6">
                     <div class="product-slider owl-carousel">
                         <div class="product-img">
-                            <figure>
+                            <figure class = "myprodect-image">
                                 <img src="{{single_product.image.url}}" alt="">
-                                <div class="p-status">new</div>
+                                <div class="magnified-lense"></div>
                             </figure>
                         </div>
                         {% for pic  in pictures   %}
                         <div class="product-img">
-                            <figure>
+                            <figure class = "myprodect-image">
                                 <img src="{{pic.image.url}}" alt="">
-                                <div class="p-status">new</div>
+                                <div class="magnified-lense"></div>
                             </figure>
                         </div>
                         {% endfor %}
@@ -49,6 +52,7 @@
                     {% csrf_token %}
                     <div >
                         <div class="product-content">
+                            <div class="magnified-image"></div>
                             <h2>{{single_product.product_name}}</h2>
                             <div class="pc-meta">
                                 <h5>${{single_product.price}}</h5>
@@ -80,17 +84,8 @@
                                     {% endfor %}
                                   </select>
                                 </div>
+                                
                               </div>
-                              
-                            {% comment %} <ul class="tags">
-                                <li><span>Category :</span> Men’s Wear</li>
-                                <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li>
-                            </ul> {% endcomment %}
-                            {% comment %} <div class="product-quantity">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
-                                </div>
-                            </div> {% endcomment %}
                             {% if single_product.stock <= 0 %}
                             <h4 class="text-danger primary-btn pc-btn">out of stock</h4>
                         {% else %}
@@ -102,84 +97,100 @@
                         {% endif %}
                 </form>
             </div>
-                    {% comment %} <ul class="p-info">
-                        <li>Product Information</li>
-                        <li>Reviews</li>
-                        <li>Product Care</li>
-                    </ul>  {% endcomment %}
+            
                 </div>
             </div>
         </div>
     </div>
     <br>
 </section>
-<!-- Product Page Section End -->
 
-<!-- Related Product Section Begin -->
-{% comment %} <section class="related-product spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="section-title">
-                    <div class="row">
-                        <div class="col-md-6">
-            
-                <header class="section-heading">
-                    <h3>Customer Reviews </h3>  
-                    
-                </header>
 
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <h5>write your review</h5>
-                    <div>
-                        <label for="">how do you rate it</label>
-                        <br>
-                        <div class="rate">
-                            <input type="radio" name="radio" id = "rating10" value="5">
-                            <input type="radio" name="radio" id = "rating9" value="4.5">
-                            <input type="radio" name="radio" id = "rating8" value="4">
-                            <input type="radio" name="radio" id = "rating7" value="3,5">
-                            <input type="radio" name="radio" id = "rating6" value="3">
-                            <input type="radio" name="radio" id = "rating5" value="2.5">
-                            <input type="radio" name="radio" id = "rating4" value="2">
-                            <input type="radio" name="radio" id = "rating3" value="1.5">
-                            <input type="radio" name="radio" id = "rating2" value="1">
-                            <input type="radio" name="radio" id = "rating1" value="0.5">
-                        </div>
 
-                        Review title
-                      <input type="text" class="form-control" name="subject">
-                      <br>
-                      Review
-                      <textarea name="review" id=""  rows="4" class="form-control"></textarea>
-                      <br>
-                      <input type="subject" value = "submit Review" class = "btn btn-primary">
-                    </div>
-                </form>
-                 <br>
-                <article class="box mb-3">
-                    <div class="icontext w-100">
-                        <img src="./images/avatars/avatar1.jpg" class="img-xs icon rounded-circle">
-                        <div class="text">
-                            <span class="date text-muted float-md-right">24.04.2020 </span>  
-                            <h6 class="mb-1">Mike John </h6>
-                            
-                        </div>
-                    </div> <!-- icontext.// -->
-                    <div class="mt-3">
-                        <p>
-                            Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip
-                        </p>	
-                    </div>
-                </article>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> {% endcomment %}
+<style>
+    .magnified-lense {
+        position: absolute;
+        width :100px;
+        height: 150px;
+        background-color: #46464633;
+        border: .1px solid #29292963;
+        opacity: 0;
+    
+    }
+    
+    .magnified-lense.active {
+        opacity: 1;
+
+    }
+    
+    .magnified-image {
+        height : 5rem;
+        width : 20rem;
+        background-color: #0173b2;
+        transform: scale(0.5);
+        opacity: 0;
+    
+    }
+    
+    .magnified-image.active {
+        opacity: 1;
+	    transform: scale(1);
+
+    }
+    
+
+</style>
+
+<script>
+    const lens = document.querySelector('.magnified-lense');
+    const product_img = document.querySelector('.myprodect-image img');
+    const magnified_img = document.querySelector('.magnified-image');
+
+    function magnify(product_img, magnified_img) {
+        product_img.addEventListener('mousemove', moveLens);
+        product_img.addEventListener('mouseout', leaveLens);
+    }
+
+    magnify(product_img, magnified_img);
+
+    function moveLens(e) {
+        let x, y, cx, cy;
+        const product_img_rect = product_img.getBoundingClientRect();
+
+        x = e.pageX - product_img_rect.left - lens.offsetWidth / 2;
+        y = e.pageY - product_img_rect.top - lens.offsetHeight / 2;
+
+        let max_xpos = product_img_rect.width - lens.offsetWidth;
+        let max_ypos = product_img_rect.height - lens.offsetHeight;
+
+        if (x > max_xpos) x = max_xpos;
+        if (x < 0) x = 0;
+
+        if (y > max_ypos) y = max_ypos;
+        if (y < 0) y = 0;
+
+        lens.style.cssText = `top:${y}px; left:${x}px`;
+
+        cx = magnified_img.offsetWidth / lens.offsetWidth;
+        cy = magnified_img.offsetHeight / lens.offsetHeight;
+
+        magnified_img.style.cssText = `background: url('${product_img.src}')
+                                        -${x * cx}px -${y * cy}px /
+                                        ${product_img_rect.width * cx}px ${product_img_rect.height * cy}px
+                                        no-repeat
+        `;
+        lens.classList.add('active');
+        magnified_img.classList.add('active');
+    }
+
+    function leaveLens() {
+        lens.classList.remove('active');
+        magnified_img.classList.remove('active');
+    }
+</script>
+
 {% include 'footer.html' %}
 {% endblock content %}
+
+
 

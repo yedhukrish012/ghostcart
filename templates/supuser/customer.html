@@ -34,7 +34,7 @@
                     <td>
                       {% if user.is_active%}
                         <form action="{% url 'block_user' user.id %}" method="post" class="d-inline">{% csrf_token %}
-                            <input type="submit" class="btn btn-danger btn-sm" value="Block">
+                            <input type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Block This User?')" value="Block">
                         </form>
                       {% else %}
                         <form action="{% url 'unblock_user' user.id %}" method="post" class="d-inline">{% csrf_token %}

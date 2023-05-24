@@ -124,16 +124,21 @@
                                     <tr>
                                         <td class="total">${{total}}</td>
                                         <td class="sub-total">${{tax}}</td>
-                                        
                                         <td class="total-cart-p"><span id="grand_total">₹ {{grand_total}}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 text-right">
-                                <a href="{% url 'checkout' %}" class="primary-btn chechout-btn">Proceed to checkout</a>
-                            </div>
+                            {% if not cart_items %}
+                                <div class="col-lg-12 text-right">
+                                    <a href="{% url 'store' %}" class="primary-btn chechout-btn">Empty Cart !!! Update It</a>
+                                </div>
+                            {% else %}
+                                <div class="col-lg-12 text-right">
+                                    <a href="{% url 'checkout' %}" class="primary-btn chechout-btn">Proceed to checkout</a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

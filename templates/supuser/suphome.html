@@ -22,15 +22,15 @@
             <div class="col-sm-6 pr-sm-2 statistics-grid">
               <div class="card card_border border-primary-top p-4">
                 <i class="lnr lnr-users"> </i>
-                <h3 class="text-primary number">29.75 M</h3>
+                <h3 class="text-primary number">{{users_count}}</h3>
                 <p class="stat-text">Total Users</p>
               </div>
             </div>
             <div class="col-sm-6 pl-sm-2 statistics-grid">
               <div class="card card_border border-primary-top p-4">
                 <i class="lnr lnr-eye"> </i>
-                <h3 class="text-secondary number">51.25 K</h3>
-                <p class="stat-text">Daily Visitors</p>
+                <h3 class="text-secondary number">{{product_count}}</h3>
+                <p class="stat-text">Product Count</p>
               </div>
             </div>
           </div>
@@ -40,15 +40,15 @@
             <div class="col-sm-6 pr-sm-2 statistics-grid">
               <div class="card card_border border-primary-top p-4">
                 <i class="lnr lnr-cloud-download"> </i>
-                <h3 class="text-success number">166.89 M</h3>
-                <p class="stat-text">Downloads</p>
+                <h3 class="text-success number">{{sums}}</h3>
+                <p class="stat-text">Weekly Revenue</p>
               </div>
             </div>
             <div class="col-sm-6 pl-sm-2 statistics-grid">
               <div class="card card_border border-primary-top p-4">
                 <i class="lnr lnr-cart"> </i>
-                <h3 class="text-danger number">1,250k</h3>
-                <p class="stat-text">Purchased</p>
+                <h3 class="text-danger number">{{total_orders}}</h3>
+                <p class="stat-text">Total Orders</p>
               </div>
             </div>
           </div>
@@ -66,7 +66,7 @@
             <div class="card-body">
               <!-- bar chart -->
               <div id="container">
-                <canvas id="barchart"></canvas>
+                <canvas id="mybarchart"></canvas>
               </div>
               <!-- //bar chart -->
             </div>
@@ -81,7 +81,7 @@
             <div class="card-body">
               <!-- line chart -->
               <div id="container">
-                <canvas id="linechart"></canvas>
+                <canvas id="mylinechart"></canvas>
               </div>
               <!-- //line chart -->
             </div>
@@ -218,49 +218,7 @@
       });
   }
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-        // Worldwide Sales Chart
-    var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
-    var myChart1 = new Chart(ctx1, {
-        type: "bar",
-        data: {
-            labels: [{% for product in products %} '{{product.product_name}}', {% endfor %}],
-            datasets: [{
-                    label: "Stock",
-                    data: [{% for product in products %} {{product.stock}}, {% endfor %}],
-                    backgroundColor: "rgba(0, 156, 255, .7)"
-                }, 
-            ]
-            },
-        options: {
-            responsive: true
-        }
-    });
 
-
-    // Salse & Revenue Chart
-    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
-    var myChart2 = new Chart(ctx2, {
-        type: "line",
-        data: {
-            labels: [{% for date in dates %}'{{date|date:"d"}}',{% endfor %}],
-            datasets: [{
-                    label: "Sales",
-                    data: [{% for sale in sales %}{{sale}},{% endfor %}],
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true
-                },
-
-            ]
-            },
-        options: {
-            responsive: true
-        }
-    });
-    
-</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
@@ -325,6 +283,51 @@ function downloadPDF() {
 // convert the element to PDF
 html2pdf().from(element).set(options).save();
 }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+        // Worldwide Sales Chart
+    var ctx1 = $("#mybarchart").get(0).getContext("2d");
+    var myChart1 = new Chart(ctx1, {
+        type: "bar",
+        data: {
+            labels: [{% for product in products %} '{{product.product_name}}', {% endfor %}],
+            datasets: [{
+                    label: "Stock",
+                    data: [{% for product in products %} {{product.stock}}, {% endfor %}],
+                    backgroundColor: "rgba(0, 156, 255, .7)"
+                }, 
+            ]
+            },
+        options: {
+            responsive: true
+        }
+    });
+
+
+    // Salse & Revenue Chart
+    var ctx2 = $("#mylinechart").get(0).getContext("2d");
+    var myChart2 = new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: [{% for date in dates %}'{{date|date:"d"}}',{% endfor %}],
+            datasets: [{
+                    label: "Sales",
+                    data: [{% for sale in sales %}{{sale}},{% endfor %}],
+                    backgroundColor: "rgba(0, 156, 255, .5)",
+                    fill: true
+                },
+
+            ]
+            },
+        options: {
+            responsive: true
+        }
+    });
+    
 </script>
 
 {% endblock %}
