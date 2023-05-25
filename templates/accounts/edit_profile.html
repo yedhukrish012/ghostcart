@@ -7,6 +7,7 @@
     <br>
     <!-- ========================= SECTION CONTENT ========================= -->
     <section class="section-content padding-y bg">
+        {% include 'alerts.html' %}
         <div class="container">
             <div class="row">
                 {% include 'dashbord_sidebar.html' %}
@@ -21,21 +22,25 @@
                                 <div class="col-md-6">
                                     <p><strong>First Name:</strong> {{ user.first_name }}</p>
                                     <br>
-                                    <p><strong>Email:</strong> {{ user.email }}</p>
+                                    <form method="post" action="{% url 'edit_profile' %}">
+                                        {% csrf_token %}
+                                        {{ user_form.as_p }}
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
                                     <br>
-                                    <p><strong>Join Date:</strong> {{ user.join_date }}</p>
-                                    <br>
-                                    <p><strong>Verification Status:</strong> {% if user.is_verified %}Verified{% else %}Not Verified{% endif %}</p>
-                                    <br>
+                                  
                                 </div>
                                 <div class="col-md-6">
                                     <p><strong>Last Name:</strong> {{ user.last_name }}</p>
                                     <br>
-                                    <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
                                     <br>
                                     <p><strong>Last Login:</strong> {{ user.last_login }}</p>
                                     <br>
                                     <p><strong>User Role:</strong> {% if user.is_admin %}Administrator{% else %}Regular User{% endif %}</p>
+                                    <br>
+                                    <p><strong>Join Date:</strong> {{ user.join_date }}</p>
+                                    <br>
+                                    <p><strong>Verification Status:</strong> {% if user.is_verified %}Verified{% else %}Not Verified{% endif %}</p>
                                     <br>
                                 </div>
                             </div> <!-- row -->

@@ -1,9 +1,11 @@
 {% extends 'supbase.html' %} {% load static %} {% block content %}
 
 <!-- main content start -->
+
 <div class="main-content">
   <!-- content -->
   <div class="container-fluid content-top-gap">
+    {% include 'alerts.html' %}
     <a href="{% url 'home' %}">
       <img src="{% static 'img/logo1.png' %}" alt="" width="88rem" />
     </a>

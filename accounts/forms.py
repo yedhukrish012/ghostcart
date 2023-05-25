@@ -36,13 +36,11 @@ class VerifyForm(forms.Form):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ("first_name","last_name","phone_number")
+        fields = ("email", "phone_number")
         widgets = {
-            "first_name": forms.TextInput(attrs={"class": "form-control"}),
-            "last_name": forms.TextInput(attrs={"class": "form-control"}),
-            "phone_number": forms.TextInput(attrs={"class": "form-control", 'placeholder':'8606615693'}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "phone_number": forms.TextInput(attrs={"class": "form-control", "placeholder": "8606615693"}),
         }
-
   
 
 class AddressBookForm(forms.ModelForm):

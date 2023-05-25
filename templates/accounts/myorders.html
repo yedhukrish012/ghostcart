@@ -1,67 +1,79 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% include 'navbar.html' %}
+{% extends 'base.html' %} {% block content %} {% include 'navbar.html' %}
 
-    <!-- ========================= SECTION CONTENT ========================= -->
-    <br>
-    <br>
-    <section class="section-conten padding-y bg">
-        <div class="container">
-            <div class="row">
-                {% include 'dashbord_sidebar.html' %}
+<!-- ========================= SECTION CONTENT ========================= -->
+<br />
+<br />
 
-                <div>
-                    <article class="card">
-                        <header class="text-center">
-                            <h3>Order History</h3>
-                        </header>
-                        <main>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Order No#</th>
-                                            <th class="text-center">Billing Name</th>
-                                            <th class="text-center">Phone No</th>
-                                            <th class="text-center">Total Amount</th>
-                                            <th class="text-center">Date</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for ord in orders %}
-                                        <tr>
-                                            <th scope="row">
-                                                <a href="{% url 'order_details' ord.order_number %}">{{ ord.order_number }}</a>
-                                            </th>
-                                            <td class="text-center">{{ ord.first_name }}</td>
-                                            <td class="text-center">{{ ord.phone }}</td>
-                                            <td class="text-center">{{ ord.order_total }}</td>
-                                            <td class="text-center">{{ ord.created_at }}</td>
-                                            <td class="text-center">{{ ord.status }}</td>
-                                            <td class="text-center">
-                                                {% if ord.status != 'Cancelled' %}
-                                                <form method="POST" action="{% url 'cancel_order' ord.id %}">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
-                                                </form>
-                                                {% else %}
-                                                <span class="text-muted">Cancelled</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </main>
-                    </article> <!-- order-group.// -->
-                </div>
-            </div> <!-- row.// -->
-        </div>
-    </section>
-    <br>
-    <br>
-    {% include 'footer.html' %}
+<section class="section-conten padding-y bg">
+  <div class="container">
+    <div class="row">
+      {% include 'dashbord_sidebar.html' %} {% if orders %}
+      <div>
+        <article class="card">
+          <header class="text-center">
+            <h3>Order History</h3>
+          </header>
+          <main>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th>Order No#</th>
+                    <th class="text-center">Billing Name</th>
+                    <th class="text-center">Phone No</th>
+                    <th class="text-center">Total Amount</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ord in orders %}
+                  <tr>
+                    <th scope="row">
+                      <a href="{% url 'order_details' ord.order_number %}"
+                        >{{ ord.order_number }}</a
+                      >
+                    </th>
+                    <td class="text-center">{{ ord.first_name }}</td>
+                    <td class="text-center">{{ ord.phone }}</td>
+                    <td class="text-center">{{ ord.order_total }}</td>
+                    <td class="text-center">{{ ord.created_at }}</td>
+                    <td class="text-center">{{ ord.status }}</td>
+                    <td class="text-center">
+                      {% if ord.status != 'Cancelled' %}
+                      <form
+                        method="POST"
+                        action="{% url 'cancel_order' ord.id %}"
+                      >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          Cancel Order
+                        </button>
+                      </form>
+                      {% else %}
+                      <span class="text-muted">Cancelled</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </main>
+        </article>
+        <!-- order-group.// -->
+      </div>
+      {% else %}
+      <h4>You Didn't placed Any Orders Yet!</h4>
+      {% endif %} 
+    </div>
+    <!-- row.// -->
+  </div>
+</section>
+
+<br />
+<br />
+
+{% include 'footer.html' %} 
 {% endblock content %}

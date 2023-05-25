@@ -221,13 +221,22 @@ def myorders(request):
     }
     return render(request,'accounts/myorders.html',context)
 
+
 @login_required(login_url='signin')    
 def edit_profile(request):
-    user_form = UserForm(instance=request.user)
+    user_form =  UserForm(instance=request.user)
+
+    if request.method == 'POST':
+        user_form =  UserForm(request.POST, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('edit_profile')
+
     context = {
-        "user_form" : user_form,
+        'user_form': user_form,
     }
-    return render(request,'accounts/edit_profile.html',context)
+    return render(request, 'accounts/edit_profile.html', context)
 
 @login_required(login_url='signin')
 def change_password(request):

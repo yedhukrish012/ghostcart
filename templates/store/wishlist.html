@@ -6,107 +6,123 @@
 
 
     <!-- Page Add Section Begin -->
-    <section class="page-add">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="page-breadcrumb">
-                        <h2>Wish List<span>.</span></h2>
-                        {% comment %} <a href="#">Home</a>
-                        <a href="#">Dresses</a>
-                        <a class="active" href="#">Night Dresses</a> {% endcomment %}
+    {% if wishlist_items %}
+        <section class="page-add">
+            <div class="container">
+                {% include 'alerts.html' %}
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="page-breadcrumb">
+                            <h2>Wish List<span>.</span></h2>
+                            {% comment %} <a href="#">Home</a>
+                            <a href="#">Dresses</a>
+                            <a class="active" href="#">Night Dresses</a> {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <img src="img/add.jpg" alt="">
                     </div>
                 </div>
-                <div class="col-lg-8">
-                    <img src="img/add.jpg" alt="">
-                </div>
             </div>
-        </div>
-    </section>
-    <!-- Page Add Section End -->
+        </section>
+        <!-- Page Add Section End -->
 
-    <!-- Categories Page Section Begin -->
-    <section class="categories-page spad">
-        <div class="container">
-            <div class="categories-controls">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="categories-filter">
-                            <div class="cf-left">
-                                <form action="#">
-                                    <select class="sort">
-                                        <option value="">Sort by</option>
-                                        <option value="">Orders</option>
-                                        <option value="">Newest</option>
-                                        <option value="">Price</option>
-                                    </select>
-                                </form>
+        <!-- Categories Page Section Begin -->
+        <section class="categories-page spad">
+            <div class="container">
+                <div class="categories-controls">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="categories-filter">
+                                <div class="cf-left">
+                                    {% comment %} <form action="#">
+                                        <select class="sort">
+                                            <option value="">Sort by</option>
+                                            <option value="">Orders</option>
+                                            <option value="">Newest</option>
+                                            <option value="">Price</option>
+                                        </select>
+                                    </form> {% endcomment %}
+                                </div>
+                                <div class="cf-right">
+                                    <span>{{product_count}} Products</span>
+                                    <!-- Display the products here -->
+    ...
+    <!-- Display the pagination links -->
+                                            {% if products.has_other_pages %}
+                                                <div class="pagination">
+                                                    <span class="step-links">
+
+                                                        {% for i in products.paginator.page_range %}
+                                                            {% if products.number == i %}
+                                                                <span class="current-page">{{ i }}</span>
+                                                            {% else %}
+                                                                <a href="?page={{ i }}">{{ i }}</a>
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </span>
+                                                </div>
+                                            {% endif %}
                             </div>
-                            <div class="cf-right">
-                                <span>{{product_count}} Products</span>
-                                <!-- Display the products here -->
-...
-
-<!-- Display the pagination links -->
-                                        {% if products.has_other_pages %}
-                                            <div class="pagination">
-                                                <span class="step-links">
-
-                                                    {% for i in products.paginator.page_range %}
-                                                        {% if products.number == i %}
-                                                            <span class="current-page">{{ i }}</span>
-                                                        {% else %}
-                                                            <a href="?page={{ i }}">{{ i }}</a>
-                                                        {% endif %}
-                                                    {% endfor %}
-
-                                                </span>
-                                            </div>
-                                        {% endif %}
                         </div>
                     </div>
                 </div>
-            </div>
-                <div class="col-lg-12 col-md-12">
-                    <div class="row justify-content-center">
-                        {% for item in wishlist_items %}    
-                        <div class="col-lg-3 col-md-3">
-                            <div class="single-product-item">
-                                <figure>
-                                    <a href="{{item.product.get_url}}"><img src="{{item.product.image.url}}" alt="{{item.product.product_name}}" width="400" height="200"></a>
-                                    
-                                </figure>
-                                <div class="product-text">
-                                    <a href="{{item.product.get_url}}">
-                                        <h6>{{item.product.product_name}}</h6>
-                                    </a>
-                                    <a href="{% url 'remove_from_wishlist' item.product.id %}"><div class="btn btn-danger">Remove</div></a>
-                                    <p>${{item.product.price}}</p>
+                    <div class="col-lg-12 col-md-12">
+                        <div class="row justify-content-center">
+                            {% for item in wishlist_items %}    
+                            <div class="col-lg-3 col-md-3">
+                                <div class="single-product-item">
+                                    <figure>
+                                        <a href="{{item.product.get_url}}"><img src="{{item.product.image.url}}" alt="{{item.product.product_name}}" width="400" height="200"></a>
+                                        
+                                    </figure>
+                                    <div class="product-text">
+                                        <a href="{{item.product.get_url}}">
+                                            <h6>{{item.product.product_name}}</h6>
+                                        </a>
+                                        <a href="{% url 'remove_from_wishlist' item.product.id %}"><div class="btn btn-danger">Remove</div></a>
+                                        <p>${{item.product.price}}</p>
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
+                    </div>
+                    
+                    <style>
+                    .product-text {
+                        text-align: center;
+                    }
+                    </style>
+                    
+                
+                <div class="more-product">
+                    <div class="row">
+                        {% comment %} <div class="col-lg-12 text-center">
+                            <a href="#" class="primary-btn">Load More</a>
+                        </div> {% endcomment %}
                     </div>
                 </div>
-                
-                <style>
-                .product-text {
-                    text-align: center;
-                }
-                </style>
-                
-             
-            <div class="more-product">
-                <div class="row">
-                    {% comment %} <div class="col-lg-12 text-center">
-                        <a href="#" class="primary-btn">Load More</a>
-                    </div> {% endcomment %}
-                </div>
             </div>
+        </section>
+       {% include 'footer.html' %}
+    {% else %}
+        <div class="container">
+            {% if wishlist_items %}
+                <!-- Wishlist items and pagination -->
+            {% else %}
+                <div class="row justify-content-center">
+                    <div class="order-table">
+                        {% include 'alerts.html' %}
+                        <h4 class = "text-center p-5">Your Wishlist is empty.!</h4>
+                        <div class="text-center"><a href="{% url 'store' %}">ADD some!</a></div>   
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </section>
-
+    {% endif %}
     
     <!-- Categories Page Section End -->
-    {% include 'footer.html' %}
+    
 {% endblock content %}
