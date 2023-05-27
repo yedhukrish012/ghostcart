@@ -5,6 +5,7 @@ from carts.models import Cartitem
 from carts.views import _cart_id
 from .models import ProductImage, category, product
 
+
 # Create your views here.
 def store(request,category_slug = None):
     categories = None
@@ -47,5 +48,21 @@ def product_details(request, category_slug, product_slug):
     }
     return render(request,'store/product_details.html',context)
 
+
+
+
 def search(request):
-    return render(request,'store/store1.html')
+    keyword = request.GET.get('keyword')
+    products = None
+    product_count = 0
+    
+    if keyword:
+       products = product.objects.filter(product_name__icontains=keyword)
+       product_count = products.count()
+    
+    context = {
+        'products': products,
+        "product_count" : product_count
+    }
+    
+    return render(request, 'store/store1.html', context)

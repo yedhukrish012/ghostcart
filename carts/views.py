@@ -25,7 +25,7 @@ def mycart(request,total = 0, quantity = 0, cart_items = None):
         for item in cart_items:
             total += (item.Product.price*item.quantity)
             quantity += item.quantity
-        tax = (.12 * total)
+        tax = int(.12 * total)
         grand_total = total + tax    
     except ObjectDoesNotExist:
         pass
@@ -204,7 +204,7 @@ def checkout(request):
         for item in cart_items:
             total += (item.Product.price*item.quantity)
             quantity += item.quantity
-        tax = (.12 * total)
+        tax = int(.12 * total)
         grand_total = total + tax 
 
         if(request.session.get('total')):

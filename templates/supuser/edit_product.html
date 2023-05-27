@@ -1,6 +1,8 @@
 {% extends 'supbase.html' %}
 {% load static %} 
 {% block content %}
+<br>
+
 <style>
     .form-container {
         padding: 20px;
@@ -10,9 +12,11 @@
     }
 </style>
 
-<h1>Edit Product</h1>
+
 
 <div class="form-container">
+    <h1>Edit Product</h1>
+    <br>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ product_form.as_p }}

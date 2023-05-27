@@ -11,11 +11,14 @@ Author URL: http://w3layouts.com
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Collective Admin Panel a Flat Bootstrap Responsive Website Template | Home :: W3Layouts</title>
+  <title></title>
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/style-starter.css' %}">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <script src="https://kit.fontawesome.com/795b6432a2.js" crossorigin="anonymous"></script>
   <!-- google fonts -->
   <link href="//fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900&display=swap" rel="stylesheet">
 </head>
@@ -49,15 +52,15 @@ Author URL: http://w3layouts.com
 
       <!-- sidebar nav start -->
       <ul class="nav nav-pills nav-stacked custom-nav">
-        <li class="active"><a href="{% url 'manage' %}"><i class="fa fa-tachometer"></i><span>User Manage</span></a>
+        <li><a href="{% url 'manage' %}"><i class="fa-solid fa-user fa-lg" style="color: #8f9299;"></i><span>User Manage</span></a>
         </li>
         <li >
-          <a href="{% url 'categorymanage' %}"><i class="fa fa-cogs"></i>
+          <a href="{% url 'categorymanage' %}"><i class="fa-sharp fa-solid fa-layer-group" style="color: #8f9299;"></i></i>
             <span>Categor Manage</span></a>
         </li>
-        <li><a href="{% url 'productmanage' %}"><i class="fa fa-table"></i> <span>Manage Products</span></a></li>
-        <li><a href="{% url 'Variationmanage' %}"><i class="fa fa-th"></i> <span>Variation Manage</span></a></li>
-        <li><a href="{% url 'orderslist' %}"><i class="fa fa-file-text"></i> <span>Order Manage</span></a></li>
+        <li><a href="{% url 'productmanage' %}"><i class="fa-solid fa-shirt fa-lg " style="color: #8f9299;"></i></i> <span>Manage Products</span></a></li>
+        <li><a href="{% url 'Variationmanage' %}"><i class="fa fa-file-text"></i> <span>Variation Manage</span></a></li>
+        <li><a href="{% url 'orderslist' %}"><i class="fa fa-th"></i> <span>Order Manage</span></a></li>
       </ul>
       <!-- //sidebar nav end -->
       <!-- toggle button start -->
@@ -73,36 +76,47 @@ Author URL: http://w3layouts.com
   <br>
   <div class="header sticky-header">
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-      <a class="navbar-brand" href="#">"                   "</a>
-      <br>
-      <ul class="navbar-nav mr-auto ml-auto"> <!-- Modified line: Added "mr-auto" and "ml-auto" classes -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'supuser' %}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage' %}">Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'categorymanage' %}">Category</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'productmanage' %}">Products</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'Variationmanage' %}">VariationForm</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'orderslist' %}">Orders</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'coupen_manage' %}">Coupens</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-        </li>
-      </ul>
+        <a class="navbar-brand" href="#">Logo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto"> <!-- Modified line: Changed "mr-auto" to "mx-auto" -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'supuser' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'manage' %}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'categorymanage' %}">Category</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'productmanage' %}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Variationmanage' %}">VariationForm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'orderslist' %}">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'coupen_manage' %}">Coupons</a> <!-- Modified line: Corrected spelling of "Coupons" -->
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto"> <!-- Added new <ul> element with "ml-auto" class -->
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+              </li>
+            </ul>
+        </div>
     </nav>
-  </div>
+</div>
+
+
   
   <!-- //header-ends -->
  

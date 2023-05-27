@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from carts.models import Cart, Cartitem
@@ -154,7 +154,7 @@ def dashboard(request):
     return render(request,'accounts/dashboard.html',context)
 
 
-
+@login_required(login_url='signin')
 def forgotpassword(request):
      if request.method == "POST":
          email = request.POST['email']
@@ -180,6 +180,8 @@ def forgotpassword(request):
              return redirect('forgotpassword')
      return render(request,'accounts/forgotpassword.html')
 
+
+@login_required(login_url='signin')
 def resetpassword_validate(request,uidb64,token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -194,7 +196,8 @@ def resetpassword_validate(request,uidb64,token):
     else:
         messages.error(request, 'Sorry, the activation link has expired.!')
         return redirect('signin')
-    
+
+@login_required(login_url='signin')    
 def resetpassword(request):
     if request.method == 'POST':
         password = request.POST['password']
@@ -324,6 +327,7 @@ def my_addresses(request):
     return render(request, 'accounts/my_addresses.html',context)
 
 
+@login_required(login_url='signin')
 def  add_address(request):
     form = AddressBookForm()
     if request.method == "POST":
@@ -364,6 +368,7 @@ def cancel_order(request, order_id):
 
 def contact(request):
     return render(request, 'accounts/contact.html')
+
 
 
 

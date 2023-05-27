@@ -16,6 +16,11 @@ class ProductForm(forms.ModelForm):
         fields = ["product_name", "discription", "price", "stock", "image", "is_available", "category"]
         widgets = {
             'image': forms.ClearableFileInput(attrs={'multiple': True}),
+            'product_name': forms.TextInput(attrs={'class': 'form-control mb-3'}),
+            'discription': forms.Textarea(attrs={'class': 'form-control mb-3'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control mb-3'}),
+            'stock': forms.NumberInput(attrs={'class': 'form-control mb-3'}),
+            'category': forms.Select(attrs={'class': 'form-control mb-3'}),
         }
 
     image = forms.ImageField(label='Product Image', required=True, error_messages={'required': 'Please upload an image.'})
@@ -30,6 +35,12 @@ class VariationForm(forms.ModelForm):
     class Meta:
         model = Variation
         fields = ["Product", "variation_category", "variation_value", "is_active"]
+
+        widgets = {
+            'Product': forms.Select(attrs={'class': 'form-control mb-3'}),
+            'variation_category': forms.Select(attrs={'class': 'form-control mb-3'}),
+            'variation_value': forms.TextInput(attrs={'class': 'form-control mb-3'}),
+        }
 
 class CouponForm(forms.ModelForm):
     class Meta:

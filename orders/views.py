@@ -62,13 +62,13 @@ def payments(request):
 
     #send order placed resive mail
 
-    # mail_subject = 'ghostcart: Thank you for your order'
-    # message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
-    # to_email = request.user.email
-    # print(to_email)
-    # send_email = EmailMessage(mail_subject, message)
-    # send_email.to = [to_email]
-    # send_email.send()
+    mail_subject = 'ghostcart: Thank you for your order'
+    message = render_to_string('orders/order_resive_email.html', {'user': request.user, 'order': order})
+    to_email = request.user.email
+    print(to_email)
+    send_email = EmailMessage(mail_subject, message)
+    send_email.to = [to_email]
+    send_email.send()
 
 
 
@@ -95,7 +95,7 @@ def place_order(request,total = 0, quantity = 0):
     for item in cart_items:
         total += (item.Product.price*item.quantity) 
         quantity += item.quantity
-    tax = (.12 * total)
+    tax = int(.12 * total)
     grand_total = total + tax 
 
     if(request.session.get('total')):
