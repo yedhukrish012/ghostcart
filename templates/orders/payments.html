@@ -22,12 +22,6 @@
                  {% endif %}
         </div>
         <div class="card ">
-            <div class="card-header">
-                Payment Method
-            </div>
-            <div class="card-body">
-                <p class="card-text">{{order.payment}}</p>
-            </div>
             <div class="card ">
                 <div class="card-header">
                     Review Product
@@ -42,7 +36,13 @@
                             </div>
                             <div class="cart-item">
                                 <span>Price</span>
-                                <p>${{item.Product.price}}</p>
+                                <p>
+                                    {% if item.Product.offer_price %}
+                                        <p><del>${{ item.Product.price }}</del> ${{ item.Product.offer_price }}</p>
+                                    {% else %}
+                                        <p>${{ item.Product.price }}</p>
+                                    {% endif %}
+                                </p>
                             </div>
                             <div class="cart-item">
                                 <span>Quantity</span>

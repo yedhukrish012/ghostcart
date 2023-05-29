@@ -20,7 +20,10 @@ class Cartitem(models.Model):
     is_active = models.BooleanField(default=True)
 
     def sub_total(self):
-        return self.Product.price * self.quantity
+        if self.Product.offer_price:
+            return self.Product.offer_price * self.quantity
+        else:
+            return self.Product.price * self.quantity
 
     def __unicode__(self):
         return self.Product

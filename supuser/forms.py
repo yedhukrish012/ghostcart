@@ -13,13 +13,14 @@ class CategoryForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = product
-        fields = ["product_name", "discription", "price", "stock", "image", "is_available", "category"]
+        fields = ["product_name", "discription", "price", "stock", "offer_price", "image", "is_available", "category"]
         widgets = {
             'image': forms.ClearableFileInput(attrs={'multiple': True}),
             'product_name': forms.TextInput(attrs={'class': 'form-control mb-3'}),
             'discription': forms.Textarea(attrs={'class': 'form-control mb-3'}),
             'price': forms.NumberInput(attrs={'class': 'form-control mb-3'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control mb-3'}),
+            'offer_price': forms.NumberInput(attrs={'class': 'form-control mb-3'}),
             'category': forms.Select(attrs={'class': 'form-control mb-3'}),
         }
 

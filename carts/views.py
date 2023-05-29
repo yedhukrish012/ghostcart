@@ -23,7 +23,10 @@ def mycart(request,total = 0, quantity = 0, cart_items = None):
             mycart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = Cartitem.objects.filter(cart=mycart,is_active=True)
         for item in cart_items:
-            total += (item.Product.price*item.quantity)
+            if item.Product.offer_price:
+                total += (item.Product.offer_price * item.quantity)
+            else:
+                total += (item.Product.price * item.quantity)
             quantity += item.quantity
         tax = int(.12 * total)
         grand_total = total + tax    
@@ -202,7 +205,10 @@ def checkout(request):
             mycart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = Cartitem.objects.filter(cart=mycart,is_active=True)
         for item in cart_items:
-            total += (item.Product.price*item.quantity)
+            if item.Product.offer_price:
+                total += (item.Product.offer_price * item.quantity)
+            else:
+                total += (item.Product.price * item.quantity)
             quantity += item.quantity
         tax = int(.12 * total)
         grand_total = total + tax 

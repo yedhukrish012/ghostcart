@@ -53,7 +53,13 @@
                                 </p>
                             </div>
                         </td>
-                        <td class="price-col">${{item.Product.price}}</td>
+                        <td class="price-col">
+                        {% if item.Product.offer_price %}
+                            <h5>${{ item.Product.offer_price }}</h5>
+                        {% else %}
+                            <h5>${{ item.Product.price }}</h5>
+                        {% endif %}</td>
+                        </td>
                         <td class="quantity-col">
                             <div class="input-group">
                                 <span class="input-group-text">

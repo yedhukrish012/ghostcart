@@ -272,7 +272,10 @@ def order_details_admin(request, order_id):
         ordr_product = OrderProduct.objects.filter(order__order_number=order_id)
         order = Order.objects.get(order_number=order_id)
         for i in ordr_product:
-            subtotal += i.product_price*i.quantity
+            if i.product.offer_price:
+                subtotal += i.product.offer_price * i.quantity
+            else:
+                subtotal += i.product.price * i.quantity
         context = {
             'ordr_product': ordr_product,
             'order': order,

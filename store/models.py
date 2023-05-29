@@ -33,6 +33,7 @@ class product(models.Model):
     slug         = models.SlugField(max_length=200,unique=True)
     discription  = models.TextField(max_length=500,blank=True)
     price        = models.IntegerField()
+    offer_price  = models.IntegerField(null=True, blank=True)
     stock        = models.IntegerField()
     image        = models.ImageField(upload_to='photos/products')
     is_available  =models.BooleanField(default=True)

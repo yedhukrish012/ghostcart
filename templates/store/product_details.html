@@ -55,7 +55,12 @@
                             <div class="magnified-image"></div>
                             <h2>{{single_product.product_name}}</h2>
                             <div class="pc-meta">
-                                <h5>${{single_product.price}}</h5>
+                                <h5>  {% if single_product.offer_price %}
+                                    <h5><del>${{single_product.price}}</del></h5>
+                                    <h5>${{single_product.offer_price}}</h5>
+                                    {% else %}
+                                    <h5>${{single_product.price}}</h5>
+                                    {% endif %}</h5>
                                 <div class="rating">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>

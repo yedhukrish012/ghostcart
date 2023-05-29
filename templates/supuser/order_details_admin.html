@@ -87,7 +87,13 @@
           </p>
         </td>
         <td>{{item.quantity}}</td>
-        <td>$ {{item.product_price}}</td>
+        <td>
+          {% if item.product.offer_price %}
+              <h5> ${{ item.product.offer_price }}</h5>
+          {% else %}
+              <h5>${{ item.product.price }}</h5>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

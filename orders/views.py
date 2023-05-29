@@ -93,7 +93,10 @@ def place_order(request,total = 0, quantity = 0):
     grand_total = 0
     tax = 0
     for item in cart_items:
-        total += (item.Product.price*item.quantity) 
+        if item.Product.offer_price:
+            total += (item.Product.offer_price * item.quantity)
+        else:
+            total += (item.Product.price * item.quantity)
         quantity += item.quantity
     tax = int(.12 * total)
     grand_total = total + tax 
